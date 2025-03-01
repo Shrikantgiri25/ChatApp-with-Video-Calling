@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 from models.user_models import User
-from utils.helpers import create_unique_filename
+from utils.helpers.file_naming_helper import create_unique_filename
 
 
 class Group(models.Model):

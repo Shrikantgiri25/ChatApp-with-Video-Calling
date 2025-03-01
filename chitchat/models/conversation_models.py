@@ -2,12 +2,12 @@ import uuid
 from django.db import models
 from models.user_models import User
 from models.group_models import Group
+from utils.helpers.choices_fields import CONVERSATION_TYPE
 
 
 class Conversation(models.Model):
-    CONVERSATION_TYPES = (("private", "Private Chat"), ("group", "Group Chat"))
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    conversation_type = models.CharField(max_length=10, choices=CONVERSATION_TYPES)
+    conversation_type = models.CharField(max_length=20, choices=CONVERSATION_TYPE)
 
     # One to One chat
     user_one = models.ForeignKey(
