@@ -16,6 +16,10 @@ class User(AbstractBaseUser, models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
 
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username", "first_name", "last_name"]
+
+
     class Meta:
         db_table = "users"
 

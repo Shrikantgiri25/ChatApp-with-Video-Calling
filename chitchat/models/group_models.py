@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
-from models.user_models import User
-from utils.helpers.file_naming_helper import create_unique_filename
+from .user_models import User
+from chitchat.utils.helpers.file_naming_helper import create_unique_filename
 
 
 class Group(models.Model):
@@ -12,7 +12,7 @@ class Group(models.Model):
     )
     description = models.CharField(max_length=50, null=True, blank=True)
     group_admin = models.ForeignKey(
-        User, on_delete=models.SET_NULL, related_name="groups"
+        User, on_delete=models.SET_NULL, related_name="admin_of_groups", null=True
     )
     members = models.ManyToManyField(User, blank=True, related_name="groups")
     created_at = models.DateTimeField(auto_now_add=True)

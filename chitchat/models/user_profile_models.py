@@ -1,8 +1,8 @@
 import os
 import uuid
 from django.db import models
-from models.user_models import User
-from utils.helpers.file_naming_helper import create_unique_filename
+from .user_models import User
+from chitchat.utils.helpers.file_naming_helper import create_unique_filename
 
 
 class UserProfile(models.Model):
@@ -16,4 +16,4 @@ class UserProfile(models.Model):
     bio = models.TextField(max_length=50, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user.user_name}"
+        return f"{self.user.username}"

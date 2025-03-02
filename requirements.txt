@@ -1,3 +1,6 @@
 django == 4.2.19
 djangorestframework == 3.15.2
 django-extensions==3.2.3
+psycopg==3.2.5
+pygdotplus==2.0.2
+Pillow==10.4.0

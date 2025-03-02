@@ -3,7 +3,7 @@ from django.db import models
 from .user_models import User
 from .conversation_models import Conversation
 from .group_models import Group
-from utils.helpers.choices_fields import CALL_TYPE, CALL_STATUSES
+from chitchat.utils.helpers.choices_fields import CALL_TYPE, CALL_STATUSES
 from django.core.exceptions import ValidationError
 
 
@@ -17,7 +17,7 @@ class Call(models.Model):
     )
 
     caller = models.ForeignKey(
-        User, on_delete=models.SET_NULL, related_name="initiated_calls"
+        User, on_delete=models.CASCADE, related_name="initiated_calls"
     )
     # One on One and Group Call support
     participants = models.ManyToManyField(
@@ -43,12 +43,13 @@ class Call(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def clean(self):
-        if self.conversation.group:
-            if self.participants.exists() < 2:
-                raise ValidationError("A group call must have atleast 2 participants")
+        if self.conversation.group and self.participants.count() < 2:
+            raise ValidationError("A group call must have atleast 2 participants")
         else:
-            if self.participants.exists() != 2:
-                raise ValidationError("An One on One call must have exactly 2 participants")
+            if self.participants.count() != 2:
+                raise ValidationError(
+                    "An One on One call must have exactly 2 participants"
+                )
         return super().clean()
 
     def save(self, force_insert=..., force_update=..., using=..., update_fields=...):

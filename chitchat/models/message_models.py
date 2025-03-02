@@ -1,9 +1,9 @@
 import uuid
 from django.db import models
-from models.user_models import User
-from models.conversation_models import Conversation
-from models.attachment_models import Attachment
-from models.group_models import Group
+from .user_models import User
+from .conversation_models import Conversation
+from .attachment_models import Attachment
+from .group_models import Group
 
 
 class Message(models.Model):
@@ -30,7 +30,7 @@ class Message(models.Model):
         related_name="group_messages",
     )
 
-    attachment = models.ManyToManyField(Attachment, blank=True, related_name="messages")
+    attachment = models.ManyToManyField(Attachment, blank=True, related_name="message")
     is_deleted = models.BooleanField(default=False)
     reply_to = models.ForeignKey(
         "self", null=True, blank=True, on_delete=models.SET_NULL, related_name="replies"
