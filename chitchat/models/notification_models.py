@@ -3,7 +3,7 @@ from django.db import models
 from .message_models import Message
 from .user_models import User
 from .call_models import Call
-from utils.helpers.choices_fields import NOTIFICATION_TYPE
+from chitchat.utils.helpers.choices_fields import NOTIFICATION_TYPE
 from django.core.exceptions import ValidationError
 
 
@@ -29,11 +29,13 @@ class Notification(models.Model):
         User,
         on_delete=models.SET_NULL,
         related_name="sent_notifications",
+        null=True
     )
     recipient = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
         related_name="notifications",
+        null=True
     )
 
     # If the user has seen the notification it will be false
@@ -45,9 +47,7 @@ class Notification(models.Model):
     def clean(self):
         """Ensure the notification is linked to either call or message"""
         if not self.message and not self.call:
-            raise ValidationError(
-                "A notification must be linked to either a message or a call."
-            )
+            self.full_clean()
 
     def __str__(self):
         return f"{self.notification_type} for {self.recipient.username} from {self.sender.username} at {self.created_at}"
