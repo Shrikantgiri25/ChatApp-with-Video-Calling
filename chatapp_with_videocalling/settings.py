@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from chitchat.utils.env_config import EnviromentConfigs as env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-2tnub*k(5u-7fuaa5h$e6k6c496y10ttw!a+bf_0$=0!hk_wv^"
+SECRET_KEY = env.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.DEBUG_VALUE
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [env.ALLOWED_HOSTS]
 
 
 # Application definition
@@ -78,12 +79,12 @@ WSGI_APPLICATION = "chatapp_with_videocalling.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "shrikant_chatapp",
-        "USER": "postgres",
-        "PASSWORD": "password",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "ENGINE": env.ENGINE,
+        "NAME": env.NAME,
+        "USER": env.USER,
+        "PASSWORD": env.PASSWORD,
+        "HOST": env.HOST,
+        "PORT": env.PORT,
     }
 }
 
