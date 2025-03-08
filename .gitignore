@@ -169,6 +169,8 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-ER diagram.png
+
+# projects files and folders
 ER Doc.docx
 chatapp_ERD.png
+config/
