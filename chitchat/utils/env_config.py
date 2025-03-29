@@ -12,9 +12,9 @@ class EnviromentConfigs:
     ALLOWED_HOSTS = configs["DEFAULT"]["ALLOWED_HOSTS"]
 
     # Database Settings
-    ENGINE=configs["DATABASE"]["ENGINE"]
-    NAME=configs["DATABASE"]["NAME"]
-    USER=configs["DATABASE"]["USER"]
-    PASSWORD=configs["DATABASE"]["PASSWORD"]
-    HOST=configs["DATABASE"]["HOST"]
-    PORT=configs["DATABASE"]["PORT"]
+    ENGINE = configs["DATABASE"]["ENGINE"]
+    NAME = configs["DATABASE"]["NAME"]
+    USER = configs["DATABASE"]["USER"]
+    PASSWORD = configs["DATABASE"]["PASSWORD"]
+    HOST = configs["DATABASE"]["HOST"]
+    PORT = configs["DATABASE"]["PORT"]

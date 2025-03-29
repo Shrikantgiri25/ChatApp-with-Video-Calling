@@ -5,6 +5,7 @@ from .group_models import Group
 from chitchat.utils.helpers.choices_fields import CONVERSATION_TYPE
 from django.core.exceptions import ValidationError
 
+
 class Conversation(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     conversation_type = models.CharField(max_length=20, choices=CONVERSATION_TYPE)
@@ -37,12 +38,15 @@ class Conversation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
     def clean(self):
-        if self.conversation_type == "private" and (not self.user_one or not self.user_two):
+        if self.conversation_type == "private" and (
+            not self.user_one or not self.user_two
+        ):
             raise ValidationError("A private conversation must have exactly two users.")
         elif self.conversation_type == "groups" and not self.group:
-            raise ValidationError("A group conversation must be linked to a Group instance.")
+            raise ValidationError(
+                "A group conversation must be linked to a Group instance."
+            )
         return super().clean()
 
     def __str__(self):

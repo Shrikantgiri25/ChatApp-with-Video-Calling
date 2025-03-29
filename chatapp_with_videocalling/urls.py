@@ -16,8 +16,15 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from chitchat.views.user_registration_views import UserRegistrationViewSet
+from rest_framework.routers import DefaultRouter
+
+# Initialize the router
+router = DefaultRouter()
+router.register(r"register", UserRegistrationViewSet, basename="user-registration")
 
 urlpatterns = [
+    path("api/", include(router.urls)),
     path("admin/", admin.site.urls),
 ]

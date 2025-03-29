@@ -26,16 +26,10 @@ class Notification(models.Model):
     )
 
     sender = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        related_name="sent_notifications",
-        null=True
+        User, on_delete=models.SET_NULL, related_name="sent_notifications", null=True
     )
     recipient = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        related_name="notifications",
-        null=True
+        User, on_delete=models.SET_NULL, related_name="notifications", null=True
     )
 
     # If the user has seen the notification it will be false

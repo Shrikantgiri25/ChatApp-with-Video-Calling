@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.hashers import make_password
+from chitchat.manager.user_manager import UserManager
 
 # Create your models here.
 
@@ -15,20 +16,15 @@ class User(AbstractBaseUser, models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
+    # is_staff = models.BooleanField(default=False)
 
-    USERNAME_FIELD = "email"
+    USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["username", "first_name", "last_name"]
 
+    objects = UserManager()
 
     class Meta:
         db_table = "users"
 
     def __str__(self):
         return f"{self.email}"
-
-    def save(self, force_insert=..., force_update=..., using=..., update_fields=...):
-        if self.password and not self.password.startswith(
-            ("pbkdf2_sha256$", "bcrypt$", "argon2")
-        ):
-            self.password = make_password(self.password)
-        return super().save(force_insert, force_update, using, update_fields)
