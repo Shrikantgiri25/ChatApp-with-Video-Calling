@@ -43,6 +43,18 @@ INSTALLED_APPS = [
     "django_extensions",
 ]
 
+# Throttle Classes and Authentication settings
+REST_FRAMEWORK = {
+    "DEFAULT_THROTTLING_CLASS": [
+        "rest_framework.throttling.UserRateThrottle",
+        "rest_framework.throttling.AnonRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "user": "100/hour",
+        "anon": "50/hour",
+    },
+}
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -133,3 +145,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Storing Media Files Here
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# Email Settings
+EMAIL_BACKEND = env.EMAIL_BACKEND
+EMAIL_HOST = env.EMAIL_HOST
+EMAIL_PORT = env.EMAIL_PORT
+EMAIL_USE_TLS = env.EMAIL_USE_TLS
+EMAIL_HOST_USER = env.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = env.EMAIL_HOST_PASSWORD
+DEFAULT_FROM_EMAIL = env.EMAIL_HOST_USER
