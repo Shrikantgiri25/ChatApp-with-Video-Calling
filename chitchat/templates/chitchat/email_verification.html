@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Email Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f8fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            background-color: white;
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+        .button:hover{
+            background-color: #148;
+        }
+        .boof{
+            margin-top: 50px;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #aaa;
+            text-align: center;
+        }
+        .copy-button {
+        padding: 10px 18px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .link{
+        display: none;
+    }
+    .copy-button:hover {
+        background-color: #148;
+    }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>Verify Your Email Address</h2>
+    </div>
+    <p>Hi {{ user_name }},</p>
+
+    <p>Thank you for signing up. Please confirm your email address by clicking the button below:</p>
+
+    <div style="text-align: center;">
+        <a href="{{ verification_link }}" class="button">Verify Email</a>
+    </div>
+
+    <p class="boof">If the button above doesn't work, you can copy and paste the following link into your browser:</p>
+
+    <!-- Verification link text with ID -->
+    <p>
+        <a href="{{ verification_link }}" id="verification-link" class="link">{{ verification_link }}</a>
+        <button onclick="copyToClipboard()" class="copy-button">Copy</button>
+    </p>
+    
+    <!-- JS to copy link -->
+    <script>
+        function copyToClipboard() {
+            const link = document.getElementById("verification-link").href;
+            navigator.clipboard.writeText(link).then(function() {
+                alert("Verification link copied to clipboard!");
+            }, function(err) {
+                alert("Failed to copy link: " + err);
+            });
+        }
+    </script>
+    <p>If you didn’t request this, you can safely ignore this email.</p>
+
+    <div class="footer">
+        <p>&copy; {{ current_year }} ChitChat. All rights reserved.</p>
+    </div>
+</div>
+</body>
+</html>

@@ -5,3 +5,4 @@ psycopg==3.2.5
 pygdotplus==2.0.2
 Pillow==10.4.0
 configparser==7.1.0
+djangorestframework-simplejwt==5.3.1

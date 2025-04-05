@@ -18,3 +18,11 @@ class EnviromentConfigs:
     PASSWORD = configs["DATABASE"]["PASSWORD"]
     HOST = configs["DATABASE"]["HOST"]
     PORT = configs["DATABASE"]["PORT"]
+
+    # Email Settings
+    EMAIL_BACKEND = configs["EMAIL"]["EMAIL_BACKEND"]
+    EMAIL_HOST = configs["EMAIL"]["EMAIL_HOST"]
+    EMAIL_PORT = configs["EMAIL"]["EMAIL_PORT"]
+    EMAIL_USE_TLS = configs["EMAIL"]["EMAIL_USE_TLS"]
+    EMAIL_HOST_USER = configs["EMAIL"]["EMAIL_HOST_USER"]
+    EMAIL_HOST_PASSWORD = configs["EMAIL"]["EMAIL_HOST_PASSWORD"]
