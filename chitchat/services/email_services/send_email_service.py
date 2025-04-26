@@ -16,10 +16,8 @@ def send_emails(recepient, subject, message):
     if not message:
         raise EmailVerificationError("Email Message is missing")
     try:
-        plain_message = (
-            f"Hi {recepient},\nThank you for joining us, let make world a better place."
-        )
-        send_mail(
+        plain_message = f"Hi {recepient},\nThank you for joining us."
+        return send_mail(
             subject=subject,
             html_message=message,
             message=plain_message,

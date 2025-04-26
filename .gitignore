@@ -174,3 +174,4 @@ cython_debug/
 ER Doc.docx
 chatapp_ERD.png
 config/
+.hintrc
