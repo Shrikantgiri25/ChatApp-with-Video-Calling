@@ -17,10 +17,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from chitchat.views.user_registration_views import (
+from chitchat.views.user_registration_views.user_registration_views import (
     UserRegistrationViewSet,
-    ActivateUserView,
 )
+from chitchat.views.user_registration_views.user_activation_view import ActivateUserView
+from chitchat.views.login_views.token_obtain_view import CustomTokenObtainPairView
+from chitchat.views.login_views.token_refresh_view import CustomTokenRefreshView
 from rest_framework.routers import DefaultRouter
 
 # Initialize the router
@@ -29,6 +31,9 @@ router.register(r"register", UserRegistrationViewSet, basename="user-registratio
 
 urlpatterns = [
     path("activate/<token>/user/", ActivateUserView.as_view(), name="activate_user"),
-    path("api/", include(router.urls)),
     path("admin/", admin.site.urls),
+    path("api/", include(router.urls)),
+    # Used for obtaining token and refresh token
+    path("api/token/", CustomTokenObtainPairView.as_view(), name="get_token"),
+    path("api/token/refresh", CustomTokenRefreshView.as_view(), name="refresh_token"),
 ]

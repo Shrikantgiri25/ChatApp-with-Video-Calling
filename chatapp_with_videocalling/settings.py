@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from chitchat.utils.env_config import EnviromentConfigs as env
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,14 +46,23 @@ INSTALLED_APPS = [
 
 # Throttle Classes and Authentication settings
 REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
     "DEFAULT_THROTTLING_CLASS": [
         "rest_framework.throttling.UserRateThrottle",
         "rest_framework.throttling.AnonRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "user": "100/hour",
-        "anon": "50/hour",
+        "user": env.USER_THROTTLE_LIMIT,
+        "anon": env.ANON_THROTTLE_LIMIT,
     },
+}
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
 
 MIDDLEWARE = [
@@ -154,3 +164,7 @@ EMAIL_USE_TLS = env.EMAIL_USE_TLS
 EMAIL_HOST_USER = env.EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = env.EMAIL_HOST_PASSWORD
 DEFAULT_FROM_EMAIL = env.EMAIL_HOST_USER
+
+
+# Custom user for the APP
+AUTH_USER_MODEL = "chitchat.User"

@@ -3,15 +3,11 @@ from rest_framework.exceptions import Throttled
 from chitchat.serializers.user_registration_serializers import (
     UserRegistrationSerializer,
 )
-from rest_framework.views import APIView
 from chitchat.utils.helpers.create_api_response import create_api_response
 from chitchat.utils.helpers.constants import (
     EMAIL_VERIFICATION_SENT,
     USER_REGISTRATION_FAILED,
     TO_MANY_REQUEST_429,
-    EMAIL_VERIFICATION_FAILED,
-    EMAIL_VERIFICATION_SUCCESSFUL,
-    SOMETHING_WENT_WRONG,
 )
 from chitchat.services.email_services.email_verification_link_generator_service import (
     generate_email_verification_link,
@@ -20,10 +16,6 @@ from chitchat.services.email_services.send_email_verification_link import (
     send_email_verification_link,
 )
 from chitchat.services.user_services.user_service import UserService
-from chitchat.services.email_services.email_verifying_token_verification_service import (
-    verify_user_email_verification_token,
-)
-from rest_framework.exceptions import ValidationError
 
 
 class UserRegistrationViewSet(viewsets.ModelViewSet):
@@ -51,34 +43,6 @@ class UserRegistrationViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return create_api_response(
                 message=USER_REGISTRATION_FAILED,
-                http_status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                errors=str(e),
-            )
-
-
-class ActivateUserView(APIView):
-    authentication_classes = []
-    permission_classes = [permissions.AllowAny]
-
-    def get(self, request, token):
-        try:
-            user_data = verify_user_email_verification_token(token=token)
-            user_data.is_active = True
-            user_data.save()
-            return create_api_response(
-                data={"Email": user_data.email},
-                message=EMAIL_VERIFICATION_SUCCESSFUL,
-                http_status=status.HTTP_202_ACCEPTED,
-            )
-        except ValidationError as e:
-            return create_api_response(
-                message=EMAIL_VERIFICATION_FAILED,
-                errors=str(e),
-                http_status=status.HTTP_400_BAD_REQUEST,
-            )
-        except Exception as e:
-            return create_api_response(
-                message=SOMETHING_WENT_WRONG,
                 http_status=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 errors=str(e),
             )
