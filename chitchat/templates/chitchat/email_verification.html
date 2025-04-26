@@ -47,22 +47,21 @@
             text-align: center;
         }
         .copy-button {
-        padding: 10px 18px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-    .link{
-        display: none;
-    }
-    .copy-button:hover {
-        background-color: #148;
-    }
-
+            padding: 10px 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .link {
+            display: inline; /* Make sure the link is visible */
+        }
+        .copy-button:hover {
+            background-color: #148;
+        }
     </style>
 </head>
 <body>
@@ -83,11 +82,11 @@
     <!-- Verification link text with ID -->
     <p>
         <a href="{{ verification_link }}" id="verification-link" class="link">{{ verification_link }}</a>
-        <button onclick="copyToClipboard()" class="copy-button">Copy</button>
+        <!-- <button onclick="copyToClipboard()" class="copy-button">Copy</button> -->
     </p>
     
     <!-- JS to copy link -->
-    <script>
+    <!-- <script>
         function copyToClipboard() {
             const link = document.getElementById("verification-link").href;
             navigator.clipboard.writeText(link).then(function() {
@@ -96,7 +95,7 @@
                 alert("Failed to copy link: " + err);
             });
         }
-    </script>
+    </script> -->
     <p>If you didn’t request this, you can safely ignore this email.</p>
 
     <div class="footer">
