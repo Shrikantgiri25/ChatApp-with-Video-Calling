@@ -24,9 +24,9 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
     def post(self, request, *args, **kwargs):
         try:
-            user_name = request.data.get("username")
+            email = request.data.get("email")
             try:
-                user = User.objects.get(username=user_name)
+                user = User.objects.get(email=email)
                 if user.is_active:
                     return super().post(request, *args, **kwargs)
                 return create_api_response(

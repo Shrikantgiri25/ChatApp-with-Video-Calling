@@ -6,3 +6,4 @@ from .message_models import *
 from .notification_models import *
 from .user_models import *
 from .user_profile_models import *
+from .issued_tokens import *

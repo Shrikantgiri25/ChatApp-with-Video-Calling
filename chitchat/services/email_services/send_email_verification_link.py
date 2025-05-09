@@ -9,7 +9,7 @@ def send_email_verification_link(user, activation_link):
         message = render_to_string(
             "chitchat/email_verification.html",
             {
-                "user_name": user.username,
+                "email": user.email,
                 "verification_link": activation_link,
                 "current_year": now().year,
             },

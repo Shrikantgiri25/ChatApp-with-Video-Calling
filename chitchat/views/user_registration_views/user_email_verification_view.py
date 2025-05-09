@@ -5,25 +5,42 @@ from chitchat.utils.helpers.constants import (
     EMAIL_VERIFICATION_FAILED,
     EMAIL_VERIFICATION_SUCCESSFUL,
     SOMETHING_WENT_WRONG,
+    USER_NOT_EXISTS,
+    USER_EMAIL_VERIFICATION,
+    LINK_EXPIRED,
+    SET_PASSWORD
 )
 
-from chitchat.services.email_services.email_verifying_token_verification_service import (
-    verify_user_email_verification_token,
+from chitchat.services.token_services.verify_decode_token import (
+    verify_decode_token,
 )
+from chitchat.services.token_services.token_generator_service import generate_token
 from rest_framework.exceptions import ValidationError
+from chitchat.utils.helpers.enums import UserStatus
+from chitchat.models.user_models import User
 
 
-class ActivateUserView(APIView):
+class UserEmailVerificationView(APIView):
     authentication_classes = []
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, token):
         try:
-            user_data = verify_user_email_verification_token(token=token)
-            user_data.is_active = True
-            user_data.save()
+            token = verify_decode_token(token=token, purpose=USER_EMAIL_VERIFICATION)
+            user_email = token["email"]
+            try:
+                user = User.objects.get(email=user_email)
+            except User.DoesNotExist:
+                raise ValidationError(USER_NOT_EXISTS)
+
+            if user.status == UserStatus.VERIFIED:
+                raise ValidationError(LINK_EXPIRED)
+            else:
+                user.status = UserStatus.VERIFIED
+                user.save()
+                token = generate_token(user=user, purpose=SET_PASSWORD, lifetime=10) #10 minutes
             return create_api_response(
-                data={"Email": user_data.email},
+                data={"Email": user_email, "token": str(token)},
                 message=EMAIL_VERIFICATION_SUCCESSFUL,
                 http_status=status.HTTP_204_NO_CONTENT,
             )

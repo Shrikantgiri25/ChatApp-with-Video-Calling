@@ -8,6 +8,7 @@ from .models import (
     Notification,
     User,
     UserProfile,
+    IssuedToken
 )
 
 
@@ -20,3 +21,5 @@ admin.site.register(Message)
 admin.site.register(Notification)
 admin.site.register(User)
 admin.site.register(UserProfile)
+admin.site.register(IssuedToken)
+admin.site.site_header = "ChitChat Admin"
