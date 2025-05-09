@@ -14,7 +14,7 @@ class Group(models.Model):
     group_admin = models.ForeignKey(
         User, on_delete=models.SET_NULL, related_name="admin_of_groups", null=True
     )
-    members = models.ManyToManyField(User, blank=True, related_name="groups")
+    members = models.ManyToManyField(User, blank=True, related_name="groupsmembers")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
