@@ -36,4 +36,6 @@ urlpatterns = [
     # Used for obtaining token and refresh token
     path("api/token/", CustomTokenObtainPairView.as_view(), name="get_token"),
     path("api/token/refresh", CustomTokenRefreshView.as_view(), name="refresh_token"),
+
+    path('accounts/', include('allauth.urls')),
 ]

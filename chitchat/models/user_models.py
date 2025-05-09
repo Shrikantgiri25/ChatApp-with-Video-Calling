@@ -1,13 +1,13 @@
 import uuid
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.hashers import make_password
 from chitchat.manager.user_manager import UserManager
 
 # Create your models here.
 
 
-class User(AbstractBaseUser, models.Model):
+class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name = models.CharField(max_length=30, null=False)
     last_name = models.CharField(max_length=30, null=False)
@@ -29,7 +29,7 @@ class User(AbstractBaseUser, models.Model):
 
     def __str__(self):
         return f"{self.email}"
-
+    
     # ADD THESE TWO METHODS 👇
     def has_perm(self, perm, obj=None):
         return self.is_superuser

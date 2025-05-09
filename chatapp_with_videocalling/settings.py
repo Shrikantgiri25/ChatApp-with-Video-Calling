@@ -42,6 +42,18 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "chitchat",
     "django_extensions",
+
+    #google auth
+    #allauth apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default for admin login
+    'allauth.account.auth_backends.AuthenticationBackend',  # Enables allauth (email login, social login)
 ]
 
 # Throttle Classes and Authentication settings
@@ -66,6 +78,7 @@ SIMPLE_JWT = {
 }
 
 MIDDLEWARE = [
+    'allauth.account.middleware.AccountMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -73,9 +86,11 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = "chatapp_with_videocalling.urls"
+
 
 TEMPLATES = [
     {
@@ -168,3 +183,25 @@ DEFAULT_FROM_EMAIL = env.EMAIL_HOST_USER
 
 # Custom user for the APP
 AUTH_USER_MODEL = "chitchat.User"
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+# Redirects (can be API endpoints later)
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
