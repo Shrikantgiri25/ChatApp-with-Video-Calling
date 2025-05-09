@@ -1,13 +1,13 @@
-from chitchat.services.email_services.email_verifying_token_generator_service import (
-    generate_user_email_verification_token,
+from chitchat.services.token_services.token_generator_service import (
+    generate_token,
 )
-from chitchat.utils.helpers.constants import SOMETHING_WENT_WRONG
-
+from chitchat.utils.helpers.constants import SOMETHING_WENT_WRONG, USER_EMAIL_VERIFICATION
 
 def generate_email_verification_link(user):
     try:
-        token = generate_user_email_verification_token(user)
-        activation_link = f"localhost:8000/activate/{token}/user/"
+        token = generate_token(user=user, purpose=USER_EMAIL_VERIFICATION, lifetime=60 * 24 * 3) # 3 days
+        print("token", token)
+        activation_link = f"localhost:8000/verify/{token}/email/"
         return activation_link
     except Exception as e:
         raise Exception(SOMETHING_WENT_WRONG)
