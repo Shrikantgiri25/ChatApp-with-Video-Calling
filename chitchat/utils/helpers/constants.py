@@ -22,5 +22,6 @@ TO_MANY_REQUEST_429 = "Too many requests. Please try again later."
 # Common
 SOMETHING_WENT_WRONG = "Something went wrong."
 LINK_EXPIRED = "Link expired."
-
-GOOGLE_LOGIN_REDIRECT_URL = "http://127.0.0.1:8000/google/token/"
+LOGIN_SUCCESSFUL = "Login successful."
+GOOGLE_LOGIN_REDIRECT_URL = "/api/v1/google/token/"
+GOOGLE_FRONTEND_LOGIN_REDIRECT = "http://localhost:3000/?token="

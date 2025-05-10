@@ -42,7 +42,7 @@ api_v1_routes = [
     #Used for obtaining token and refresh token
     path("login/", CustomTokenObtainPairView.as_view(), name="get_token"),
     path("token/refresh", CustomTokenRefreshView.as_view(), name="refresh_token"),
-    # path("google/token/", GoogleLoginTokenView.as_view(), name="google_token"),
+    path("google/token/", GoogleLoginTokenView.as_view(), name="google_token"),
 
     # Fetching current user data
     path("me/", MeUserView.as_view(), name="me_user"),

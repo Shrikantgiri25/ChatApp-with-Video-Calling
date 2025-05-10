@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 from chitchat.utils.env_config import EnviromentConfigs as env
 from datetime import timedelta
-
+from chitchat.utils.helpers.constants import GOOGLE_LOGIN_REDIRECT_URL
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -59,6 +59,7 @@ AUTHENTICATION_BACKENDS = [
 # Throttle Classes and Authentication settings
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
+        'rest_framework.authentication.SessionAuthentication',
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_THROTTLING_CLASS": [
@@ -69,6 +70,9 @@ REST_FRAMEWORK = {
         "user": env.USER_THROTTLE_LIMIT,
         "anon": env.ANON_THROTTLE_LIMIT,
     },
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
 }
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=int(env.JWT_TOKEN_LIFETIME)),
@@ -203,5 +207,6 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # Important!
 ACCOUNT_USERNAME_REQUIRED = False
 
 # Redirects (can be API endpoints later)
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = GOOGLE_LOGIN_REDIRECT_URL
+
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
