@@ -13,7 +13,7 @@ class IssuedToken(models.Model):
         on_delete=models.CASCADE,
         related_name="issued_tokens",
     )
-    token = models.CharField(max_length=1000, unique=True)
+    token = models.CharField(max_length=1024, unique=True)
     purpose = models.CharField(max_length=50, choices=[(USER_EMAIL_VERIFICATION, "Email Verification"), (SET_PASSWORD, "Password Reset")])
     issued_at = models.DateTimeField(default=timezone.now)
     expires_at = models.DateTimeField(null=True, blank=True)

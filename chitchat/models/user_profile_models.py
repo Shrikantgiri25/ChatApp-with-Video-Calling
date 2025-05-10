@@ -12,8 +12,8 @@ class UserProfile(models.Model):
         upload_to=create_unique_filename, null=True, blank=True
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
-    status = models.BooleanField(default=False)
+    is_online = models.BooleanField(default=False)
     bio = models.TextField(max_length=50, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user.username}"
+        return f"{self.user.full_name}"

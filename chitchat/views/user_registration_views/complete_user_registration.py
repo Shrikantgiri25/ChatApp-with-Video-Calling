@@ -14,6 +14,8 @@ from rest_framework import status, permissions, throttling
 from chitchat.services.token_services.verify_decode_token import (
     verify_decode_token
 )
+from chitchat.utils.helpers.enums import UserStatus
+from chitchat.models.user_profile_models import UserProfile
 
 class SetAccountPassword(APIView):
     """
@@ -27,7 +29,7 @@ class SetAccountPassword(APIView):
     def post(self, request):
         try:
             data = request.data.copy()
-            token = data.pop("token")
+            token = data.pop("token_id", None)
             if not token:
                 return create_api_response(
                     message="Token is required",
@@ -35,10 +37,14 @@ class SetAccountPassword(APIView):
                 )
             else:
                 # Verify the token and get the user email
-                token = verify_decode_token(token=token, purpose=SET_PASSWORD)
+                token = verify_decode_token(token_id=token, purpose=SET_PASSWORD)
                 user_email = token["email"]
                 data["email"] = user_email
                 user = UserService.update_user(data=data)
+                if user.status == UserStatus.NEW_USER:
+                    UserProfile.objects.create(
+                        user=user,
+                    )
                 return create_api_response(
                     message=USER_ACCOUNT_CREATED,
                     data={"Email": user.email},
