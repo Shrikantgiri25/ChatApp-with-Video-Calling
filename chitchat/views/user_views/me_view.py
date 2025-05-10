@@ -19,7 +19,6 @@ class MeUserView(APIView):
         """
         Get the current user's data.
         """
-        print("Request user:", timedelta(days=1))
         user = request.user
         serializer = self.serializer_class(user)
         return create_api_response(

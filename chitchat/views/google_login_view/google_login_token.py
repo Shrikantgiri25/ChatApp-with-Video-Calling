@@ -6,16 +6,19 @@ from chitchat.models.user_models import User
 from chitchat.utils.helpers.constants import (
     USER_NOT_EXISTS,
     USER_ACCOUNT_INACTIVE,
+    LOGIN_SUCCESSFUL
 )
 from rest_framework import status
 from chitchat.utils.helpers.create_api_response import create_api_response
 
 
+from django.shortcuts import redirect
+
 class GoogleLoginTokenView(APIView):
-    permission_classes = [IsAuthenticated]  # Allow any user, since you're redirecting after Google login
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        email = request.user.email  # Email should come from the authenticated user (session-based)
+        email = request.user.email
         
         try:
             user = User.objects.get(email=email)
@@ -28,11 +31,15 @@ class GoogleLoginTokenView(APIView):
 
             # Generate JWT tokens
             refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            # Send token via query param (or redirect to frontend with it)
+            # frontend_redirect = GOOGLE_FRONTEND_LOGIN_REDIRECT + {access_token}
             return create_api_response(
-                message="Login successful",
+                message=LOGIN_SUCCESSFUL,
                 data={
-                    "refresh": str(refresh),
-                    "access": str(refresh.access_token)
+                    "access_token": access_token,
+                    "refresh_token": str(refresh),
+                    # "redirect_url": f"{GOOGLE_FRONTEND_LOGIN_REDIRECT}{access_token}"
                 },
                 http_status=status.HTTP_200_OK,
             )
