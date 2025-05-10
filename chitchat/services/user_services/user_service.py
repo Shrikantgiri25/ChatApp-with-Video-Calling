@@ -38,7 +38,7 @@ class UserService:
                 raise ValidationError("User account is already active.")
             serializer = UserSerializer(user_instance, data=data, partial=True)
             if serializer.is_valid():
-                serializer.validated_data["status"] = UserStatus.ACTIVE
+                serializer.validated_data["status"] = UserStatus.NEW_USER
                 serializer.validated_data["is_active"] = True
                 user = serializer.save()
                 return user

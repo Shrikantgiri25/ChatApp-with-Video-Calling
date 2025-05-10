@@ -16,7 +16,7 @@ def generate_token(user, purpose, lifetime=5):  # lifetime in minutes
         ).first()
 
         if is_issued_token and not is_issued_token.is_expired():
-            return is_issued_token.token
+            return is_issued_token
         elif is_issued_token:
             is_issued_token.is_active = False
             is_issued_token.save()
@@ -30,14 +30,13 @@ def generate_token(user, purpose, lifetime=5):  # lifetime in minutes
         )
 
         token_str = str(token)
-
-        ew = IssuedToken.objects.create(
+        is_issued_token = IssuedToken.objects.create(
             user=user,
             token=token_str,
             purpose=purpose,
             expires_at=timezone.now() + timedelta(minutes=lifetime)
         )
-        return token_str
+        return is_issued_token
 
     except Exception as e:
         import traceback

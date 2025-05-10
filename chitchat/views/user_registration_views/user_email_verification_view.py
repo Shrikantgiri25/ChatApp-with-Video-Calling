@@ -26,7 +26,7 @@ class UserEmailVerificationView(APIView):
 
     def get(self, request, token):
         try:
-            token = verify_decode_token(token=token, purpose=USER_EMAIL_VERIFICATION)
+            token = verify_decode_token(token_id=token, purpose=USER_EMAIL_VERIFICATION)
             user_email = token["email"]
             try:
                 user = User.objects.get(email=user_email)
@@ -40,7 +40,7 @@ class UserEmailVerificationView(APIView):
                 user.save()
                 token = generate_token(user=user, purpose=SET_PASSWORD, lifetime=10) #10 minutes
             return create_api_response(
-                data={"Email": user_email, "token": str(token)},
+                data={"Email": user_email, "token_id": token.id},
                 message=EMAIL_VERIFICATION_SUCCESSFUL,
                 http_status=status.HTTP_204_NO_CONTENT,
             )
