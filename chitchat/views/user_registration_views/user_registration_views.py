@@ -23,7 +23,7 @@ class UserRegistrationViewSet(viewsets.ModelViewSet):
     authentication_classes = []
     permission_classes = [permissions.AllowAny]
     throttle_classes = [throttling.AnonRateThrottle]
-    
+
     def create(self, request):
         try:
             user = UserService.create_user(request.data)

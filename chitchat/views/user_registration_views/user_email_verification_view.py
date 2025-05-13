@@ -8,7 +8,7 @@ from chitchat.utils.helpers.constants import (
     USER_NOT_EXISTS,
     USER_EMAIL_VERIFICATION,
     LINK_EXPIRED,
-    SET_PASSWORD
+    SET_PASSWORD,
 )
 
 from chitchat.services.token_services.verify_decode_token import (
@@ -38,7 +38,9 @@ class UserEmailVerificationView(APIView):
             else:
                 user.status = UserStatus.VERIFIED
                 user.save()
-                token = generate_token(user=user, purpose=SET_PASSWORD, lifetime=10) #10 minutes
+                token = generate_token(
+                    user=user, purpose=SET_PASSWORD, lifetime=10
+                )  # 10 minutes
             return create_api_response(
                 data={"Email": user_email, "token_id": token.id},
                 message=EMAIL_VERIFICATION_SUCCESSFUL,

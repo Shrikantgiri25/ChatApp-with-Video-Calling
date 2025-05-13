@@ -6,6 +6,8 @@ from chitchat.utils.helpers.constants import (
     SET_PASSWORD,
 )
 from django.utils import timezone
+
+
 class IssuedToken(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
@@ -14,7 +16,13 @@ class IssuedToken(models.Model):
         related_name="issued_tokens",
     )
     token = models.CharField(max_length=1024, unique=True)
-    purpose = models.CharField(max_length=50, choices=[(USER_EMAIL_VERIFICATION, "Email Verification"), (SET_PASSWORD, "Password Reset")])
+    purpose = models.CharField(
+        max_length=50,
+        choices=[
+            (USER_EMAIL_VERIFICATION, "Email Verification"),
+            (SET_PASSWORD, "Password Reset"),
+        ],
+    )
     issued_at = models.DateTimeField(default=timezone.now)
     expires_at = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=True)  # You can deactivate/expire manually

@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from rest_framework.authtoken.models import Token  # or use JWT
 from django.conf import settings
 
+
 class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     def get_login_redirect_url(self, request):
         user = request.user

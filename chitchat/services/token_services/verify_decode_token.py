@@ -3,6 +3,7 @@ from chitchat.utils.helpers.constants import SOMETHING_WENT_WRONG
 from rest_framework.exceptions import ValidationError
 from chitchat.models.issued_tokens import IssuedToken
 
+
 def verify_decode_token(token_id, purpose):
     try:
         # Retrieve the issued token from the database

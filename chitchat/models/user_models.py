@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.hashers import make_password
 from chitchat.manager.user_manager import UserManager
 from chitchat.utils.helpers.enums import UserStatus
+
 # Create your models here.
 
 
@@ -35,7 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.email}"
-    
+
     # ADD THESE TWO METHODS 👇
     def has_perm(self, perm, obj=None):
         return self.is_superuser
