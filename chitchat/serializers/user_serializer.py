@@ -6,7 +6,6 @@ from django.db.models import Q
 class UserSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True, required=False)
 
-
     class Meta:
         model = User
         fields = [

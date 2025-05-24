@@ -8,7 +8,7 @@ from .models import (
     Notification,
     User,
     UserProfile,
-    IssuedToken
+    IssuedToken,
 )
 
 

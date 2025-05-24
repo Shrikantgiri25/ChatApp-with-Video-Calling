@@ -6,7 +6,7 @@ from chitchat.models.user_models import User
 from chitchat.utils.helpers.constants import (
     USER_NOT_EXISTS,
     USER_ACCOUNT_INACTIVE,
-    LOGIN_SUCCESSFUL
+    LOGIN_SUCCESSFUL,
 )
 from rest_framework import status
 from chitchat.utils.helpers.create_api_response import create_api_response
@@ -14,15 +14,16 @@ from chitchat.utils.helpers.create_api_response import create_api_response
 
 from django.shortcuts import redirect
 
+
 class GoogleLoginTokenView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         email = request.user.email
-        
+
         try:
             user = User.objects.get(email=email)
-            
+
             if not user.is_active:
                 return create_api_response(
                     errors=USER_ACCOUNT_INACTIVE,

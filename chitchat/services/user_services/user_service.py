@@ -6,6 +6,7 @@ from rest_framework.exceptions import ValidationError
 from chitchat.serializers.user_serializer import UserSerializer
 from chitchat.utils.helpers.enums import UserStatus
 
+
 class UserService:
     def create_user(data):
         try:

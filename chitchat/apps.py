@@ -8,5 +8,5 @@ class ChitchatConfig(AppConfig):
     def ready(self):
 
         # Google login signal
-        # This will import the signal handlers when the app is ready    
+        # This will import the signal handlers when the app is ready
         import chitchat.signals.google_login

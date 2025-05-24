@@ -6,26 +6,26 @@ from chitchat.utils.helpers.constants import (
     USER_ACCOUNT_CREATED,
     TO_MANY_REQUEST_429,
     SOMETHING_WENT_WRONG,
-    SET_PASSWORD
+    SET_PASSWORD,
 )
 from rest_framework import status
 from rest_framework.exceptions import Throttled
 from rest_framework import status, permissions, throttling
-from chitchat.services.token_services.verify_decode_token import (
-    verify_decode_token
-)
+from chitchat.services.token_services.verify_decode_token import verify_decode_token
 from chitchat.utils.helpers.enums import UserStatus
 from chitchat.models.user_profile_models import UserProfile
+
 
 class SetAccountPassword(APIView):
     """
     View to update user data.
     """
+
     serializer_class = UserSerializer
     authentication_classes = []
     permission_classes = [permissions.AllowAny]
     throttle_classes = [throttling.AnonRateThrottle]
-    
+
     def post(self, request):
         try:
             data = request.data.copy()

@@ -15,6 +15,7 @@ import os
 from chitchat.utils.env_config import EnviromentConfigs as env
 from datetime import timedelta
 from chitchat.utils.helpers.constants import GOOGLE_LOGIN_REDIRECT_URL
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,24 +43,24 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "chitchat",
     "django_extensions",
-
-    #google auth
-    #allauth apps
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
+    # google auth
+    # allauth apps
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "channels",
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',  # Default for admin login
-    'allauth.account.auth_backends.AuthenticationBackend',  # Enables allauth (email login, social login)
+    "django.contrib.auth.backends.ModelBackend",  # Default for admin login
+    "allauth.account.auth_backends.AuthenticationBackend",  # Enables allauth (email login, social login)
 ]
 
 # Throttle Classes and Authentication settings
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        'rest_framework.authentication.SessionAuthentication',
+        "rest_framework.authentication.SessionAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_THROTTLING_CLASS": [
@@ -70,9 +71,7 @@ REST_FRAMEWORK = {
         "user": env.USER_THROTTLE_LIMIT,
         "anon": env.ANON_THROTTLE_LIMIT,
     },
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    ),
+    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
 }
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=int(env.JWT_TOKEN_LIFETIME)),
@@ -82,7 +81,7 @@ SIMPLE_JWT = {
 }
 
 MIDDLEWARE = [
-    'allauth.account.middleware.AccountMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -112,7 +111,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "chatapp_with_videocalling.wsgi.application"
-
+ASGI_APPLICATION = "chatapp_with_videocalling.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -188,25 +187,35 @@ DEFAULT_FROM_EMAIL = env.EMAIL_HOST_USER
 AUTH_USER_MODEL = "chitchat.User"
 
 SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
         ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
+        "AUTH_PARAMS": {
+            "access_type": "online",
         },
-        'OAUTH_PKCE_ENABLED': True,
+        "OAUTH_PKCE_ENABLED": True,
     }
 }
-ACCOUNT_LOGIN_METHODS = {'email'}  # or {'username', 'email'} if you allow both
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_LOGIN_METHODS = {"email"}  # or {'username', 'email'} if you allow both
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 SOCIALACCOUNT_QUERY_EMAIL = True
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # Important!
 ACCOUNT_USERNAME_REQUIRED = False
 
 # Redirects (can be API endpoints later)
 LOGIN_REDIRECT_URL = GOOGLE_LOGIN_REDIRECT_URL
 
-ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"
+
+# Channel layers with Redis
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(env.REDIS_HOST, int(env.REDIS_PORT))],
+        },
+    },
+}

@@ -60,4 +60,4 @@ class Call(models.Model):
     def __str__(self):
         if self.group:
             return f"{self.call_type} group call in {self.group.group_name} | {self.status}"
-        return f"{self.call_type} call from {self.caller.username} to {self.conversation.user_two.username} | {self.status}"
+        return f"{self.call_type} call from {self.caller.email} to {self.conversation.user_two.email} | {self.status}"

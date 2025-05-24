@@ -1,5 +1,6 @@
 from django.contrib.auth.models import BaseUserManager
 
+
 class UserManager(BaseUserManager):
     """Custom manager for User model with email-only authentication."""
 
@@ -9,7 +10,7 @@ class UserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
-        user.is_active = extra_fields.get('is_active', False)  # default to active
+        user.is_active = extra_fields.get("is_active", False)  # default to active
         user.save(using=self._db)
         return user
 
