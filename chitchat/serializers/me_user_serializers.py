@@ -32,7 +32,6 @@ class MeUserSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # Extract profile data
-        print("validated_data", validated_data)
         profile_data = validated_data.pop("profile", {})
 
         # Update User fields

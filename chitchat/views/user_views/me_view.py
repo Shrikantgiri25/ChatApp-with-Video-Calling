@@ -37,7 +37,6 @@ class MeUserView(APIView):
         """
         user = request.user
         data = request.data
-        print("data", data)
         if user.status == "NEW_USER":
             data["status"] = UserStatus.ACTIVE
         if user.status == "INACTIVE":

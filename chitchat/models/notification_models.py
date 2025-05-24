@@ -44,4 +44,4 @@ class Notification(models.Model):
             self.full_clean()
 
     def __str__(self):
-        return f"{self.notification_type} for {self.recipient.username} from {self.sender.username} at {self.created_at}"
+        return f"{self.notification_type} for {self.recipient.email} from {self.sender.email} at {self.created_at}"

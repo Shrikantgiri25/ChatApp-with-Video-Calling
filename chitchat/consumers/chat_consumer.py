@@ -9,6 +9,12 @@ from chitchat.models.attachment_models import Attachment
 from django.db.models import Q
 from chitchat.utils.helpers.choices_fields import CONVERSATION_TYPE
 from chitchat.serializers.message_serializer import MessageSerializer
+from chitchat.serializers.notification_serializer import NotificationSerializer
+from chitchat.utils.user_status.redis_user_status import is_user_online
+from chitchat.consumers.sanitize_groupnames import (
+    sanitize_group_name,
+    sanitize_notification_group_name,
+)
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -21,9 +27,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """
         Called when the WebSocket is handshaking as part of the connection process.
         """
-        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        self.room_group_name = f"chat_{self.room_name}"
+        if "room_name" in self.scope["url_route"]["kwargs"]:
+            raw_room_name = self.scope["url_route"]["kwargs"]["room_name"]
+            self.room_name = sanitize_group_name(raw_room_name)
+        elif "group_id" in self.scope["url_route"]["kwargs"]:
+            self.room_name = self.scope["url_route"]["kwargs"]["group_id"]
+        else:
+            await self.close()
+            return
 
+        self.room_group_name = f"chat_{self.room_name}"
+        self.user = self.scope["user"]
         # Join room group
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -61,27 +75,72 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 json.dumps({"error": "Cannot send empty message and attachment."})
             )
             return
-        saved_message = await self.save_message(
+        saved_message, receiver, group = await self.save_message(
             content, sender, receiver, group_id, attachment_ids, reply_to
         )
-        if saved_message:
+        if saved_message is None:
+            return
+        send_data = await self.serialize_message(saved_message)
+        if send_data:
             # Send message to room group
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     "type": "chat_message",
                     "message": {
-                        "message_obj": saved_message["message_obj"],
-                        "timestamp": saved_message["timestamp"],
+                        "message_obj": str(send_data["message_obj"]),
+                        "timestamp": send_data["timestamp"],
                     },
                 },
             )
+            if send_data["message_obj"]["conversation"]["conversation_type"] == "group":
+                notifications = await self.create_group_message_notifications(
+                    saved_message, sender, group
+                )
+
+                # Send notification to all members except sender
+                for notif, member_id in notifications:
+                    if is_user_online(member_id):
+                        await self.channel_layer.group_send(
+                            f"notifications_user_{member_id}",
+                            {
+                                "type": "send.notification",
+                                "notification": {
+                                    "id": str(notif["id"]),
+                                    "type": "message",
+                                    "group": group.group_name,
+                                    "sender": sender.email,
+                                    "message": saved_message.content,
+                                    "created_at": str(notif["created_at"]),
+                                },
+                            },
+                        )
+            else:
+                notification = await self.create_message_notification(
+                    saved_message, sender, receiver
+                )
+                group_name = (
+                    f"notifications_user_{sanitize_notification_group_name(receiver)}"
+                )
+                await self.channel_layer.group_send(
+                    group_name,
+                    {
+                        "type": "send.notification",
+                        "notification": {
+                            "id": str(notification["id"]),
+                            "type": "message",
+                            "sender": sender.email,
+                            "message": saved_message.content,
+                            "created_at": str(notification["created_at"]),
+                        },
+                    },
+                )
 
     async def chat_message(self, event):
         await self.send(text_data=json.dumps(event["message"]))
 
     async def save_message(
-        self, content, sender, receiver, group_id, attachment_ids, reply_to
+        self, content, sender, receiver, group, attachment_ids, reply_to
     ):
         """
         Save the message to the database.
@@ -89,6 +148,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # If the message is sent to group
         attachment_obj = []
         reply_to_obj = None
+
         if attachment_ids:
             attachment_obj = await self.get_all_attachments(attachment_ids)
         if reply_to:
@@ -97,19 +157,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 await self.send(
                     json.dumps({"error": "Message which you replies was not found."})
                 )
-                return
-        if group_id:
+                return None, None, None
+        if group:
+            receiver = None
             try:
-                group = await database_sync_to_async(Group.objects.get)(id=group_id)
+                group = await database_sync_to_async(Group.objects.get)(id=group)
                 ismember = await database_sync_to_async(group.is_member)(sender)
-                if not ismember:
+                group_admin_id = await database_sync_to_async(
+                    lambda: group.group_admin.id
+                )()
+                if not ismember and group_admin_id != sender.id:
                     await self.send(
                         json.dumps({"error": "User is not part of the group."})
                     )
-                    return
-                conversation = await database_sync_to_async(Conversation.objects.get)(
-                    group=group
-                )
+                    return None, None, None
+                conversation = await self.get_group_conversation(group=group)
                 message = await database_sync_to_async(Message.objects.create)(
                     content=content,
                     sender=sender,
@@ -120,13 +182,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 await database_sync_to_async(message.attachment.set)(attachment_obj)
             except Group.DoesNotExist:
                 await self.send(json.dumps({"error": "Group does not exist."}))
-                return
+                return None, None, None
         elif receiver:
+            group = None
             try:
                 receiver = await database_sync_to_async(User.objects.get)(id=receiver)
             except User.DoesNotExist:
                 await self.send(json.dumps({"error": "User does not exist."}))
-                return
+                return None, None, None
             conversation = await self.get_private_conversation(sender, receiver)
             message = await database_sync_to_async(Message.objects.create)(
                 content=content,
@@ -139,7 +202,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.send(
                 json.dumps({"error": "No group or user id's were provided"})
             )
-            return
+            return None, None, None
+        return message, receiver, group
+
+    @database_sync_to_async
+    def serialize_message(self, message):
         return {
             "message_obj": MessageSerializer(message).data,
             "timestamp": message.created_at.isoformat(),
@@ -170,3 +237,49 @@ class ChatConsumer(AsyncWebsocketConsumer):
             user_two=receiver,
             conversation_type=CONVERSATION_TYPE[0][0],
         )
+
+    @database_sync_to_async
+    def get_group_conversation(self, group):
+        conversation = Conversation.objects.filter(
+            group=group,
+            conversation_type=CONVERSATION_TYPE[1][0],
+        ).first()
+        if conversation:
+            return conversation
+        return Conversation.objects.create(
+            group=group,
+            conversation_type=CONVERSATION_TYPE[1][0],
+        )
+
+    @database_sync_to_async
+    def create_message_notification(self, message, sender, recipient):
+        from chitchat.models import Notification
+
+        notification_instance = Notification.objects.create(
+            notification_type="message",
+            message=message,
+            sender=sender,
+            recipient=recipient,
+        )
+        return NotificationSerializer(notification_instance).data
+
+    async def create_group_message_notifications(self, message, sender, group):
+        notifications = []
+        group_members = await self.get_group_members_excluding_sender(group, sender)
+
+        for member in group_members:
+
+            notification = await self.create_message_notification(
+                message, sender, member
+            )
+            notifications.append((notification, member.id))
+        return notifications
+
+    @database_sync_to_async
+    def get_group_members_excluding_sender(self, group, sender):
+        return list(group.members.exclude(id=sender.id))
+
+    # Fetch All members of group
+    @database_sync_to_async
+    def get_group_by_id(self, group_id):
+        return Group.objects.prefetch_related("members").get(id=group_id)

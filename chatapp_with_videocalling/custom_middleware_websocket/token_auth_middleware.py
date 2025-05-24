@@ -1,6 +1,8 @@
 from channels.middleware import BaseMiddleware
-from django.contrib.auth import get_user_model
+
+# from django.contrib.auth import get_user_model
 from channels.db import database_sync_to_async
+from chitchat.models.user_models import User
 
 
 class TokenAuthMiddleware(BaseMiddleware):
@@ -8,15 +10,15 @@ class TokenAuthMiddleware(BaseMiddleware):
 
     @database_sync_to_async
     def getUser(self, token):
-        User = get_user_model()
-        return User.objects.get(id=token["id"])
+        # User = get_user_model()
+        return User.objects.get(id=token["user_id"])
 
     async def __call__(self, scope, receive, send):
         from urllib.parse import parse_qs
         from rest_framework_simplejwt.tokens import AccessToken
         from django.contrib.auth.models import AnonymousUser
 
-        query_string = scope["query_string"].decode()
+        query_string = scope.get("query_string").decode()
         query_params = parse_qs(query_string)
         token = query_params.get("token", [None])[0]
         if token:

@@ -1,8 +1,16 @@
 from rest_framework import serializers
-from chitchat.models import Message
+from chitchat.models import Message, Conversation
+
+
+class UserConversationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Conversation
+        fields = ("id", "conversation_type")
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    conversation = UserConversationSerializer(read_only=True)
+
     class Meta:
         model = Message
         fields = [
@@ -10,7 +18,7 @@ class MessageSerializer(serializers.ModelSerializer):
             "content",
             "conversation",
             "group",
-            "timestamp",
+            "created_at",
             "is_read",
             "attachment",
             "reply_to",

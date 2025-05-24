@@ -51,6 +51,8 @@ class Conversation(models.Model):
 
     def __str__(self):
         if self.conversation_type == "private":
-            return f"Private chat between {self.user_one.username} and {self.user_two.username}"
+            return (
+                f"Private chat between {self.user_one.email} and {self.user_two.email}"
+            )
         else:
-            return f"Group chat: {self.group.name}"
+            return f"Group chat: {self.group.group_name}"
