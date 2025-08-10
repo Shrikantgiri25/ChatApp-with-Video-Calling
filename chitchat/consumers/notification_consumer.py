@@ -37,6 +37,7 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
         return list(Notification.objects.filter(recipient=self.user, is_read=False))
 
     async def send_notification(self, event):
+
         await self.send_json(
             {"type": "new_notification", "notification": event["notification"]}
         )
@@ -47,9 +48,12 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
 
     @database_sync_to_async
     def mark_notification_as_read(self, notif_id):
-        Notification.objects.filter(id=notif_id, recipient=self.user).update(
-            is_read=True
-        )
+        try:
+            Notification.objects.filter(id=notif_id, recipient=self.user).update(
+                is_read=True
+            )
+        except Notification.DoesNotExist:
+            pass
 
     @database_sync_to_async
     def serialize_message(self, notification):

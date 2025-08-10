@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notifications Only</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        #notification-log {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 250px;
+            overflow-y: auto;
+            margin-top: 20px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .notification {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-left: 4px solid #007bff;
+            background-color: #eef3ff;
+        }
+        .notification strong {
+            color: #0056b3;
+        }
+        .notification em {
+            color: #666;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <h2>Real-Time Notifications</h2>
+    <div id="notification-log">Connecting to notification server...</div>
+
+    <script>
+        const userId = "6442d0db-e62d-4d41-bc1c-793517e7aa44";
+        const hostAddr = "172.28.49.0:8000"; // Replace with your backend server IP/port
+        const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ4MTY2MTE3LCJpYXQiOjE3NDgwNzk3MTcsImp0aSI6ImNkMTA1YjYyNjE4MzQyNDQ4YWU2NTQxZTIyY2NmNjIyIiwidXNlcl9pZCI6IjY0NDJkMGRiLWU2MmQtNGQ0MS1iYzFjLTc5MzUxN2U3YWE0NCJ9.TJZDGb85oEW7_8ZlAsHz5I1BLHPb5qoEF3zIZ3k3-FU";
+
+        const notifSocket = new WebSocket(
+            `ws://${hostAddr}/ws/notifications/user_${userId}/?token=${authToken}`
+        );
+
+        const log = document.getElementById("notification-log");
+
+        notifSocket.onopen = () => {
+            log.innerHTML = "<div>✅ Connected to notification server.</div>";
+        };
+
+        notifSocket.onmessage = function(e) {
+            try {
+                const data = JSON.parse(e.data);
+                const notif = data.notification;
+
+                if (!notif || !notif.type || !notif.sender || !notif.message || !notif.created_at) {
+                    console.warn("Malformed notification data:", data);
+                    return;
+                }
+
+                const content = `
+                    <div class="notification">
+                        <strong>${notif.type.toUpperCase()}</strong> from <strong>${notif.sender}</strong>:<br/>
+                        ${notif.message}<br/>
+                        <em>${notif.created_at}</em>
+                    </div>
+                `;
+                log.innerHTML += content;
+                log.scrollTop = log.scrollHeight;
+            } catch (err) {
+                console.error("Error handling notification message:", err);
+            }
+        };
+
+        notifSocket.onerror = function(error) {
+            console.error("WebSocket error:", error);
+            log.innerHTML += `<div style="color: red;">❌ WebSocket error. Check console.</div>`;
+        };
+
+        notifSocket.onclose = function(e) {
+            log.innerHTML += `<div style="color: gray;">🔌 WebSocket connection closed.</div>`;
+        };
+    </script>
+</body>
+</html>

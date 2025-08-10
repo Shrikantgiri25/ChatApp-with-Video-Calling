@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group Chat & Notifications</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        #chat-log, #notification-log { border: 1px solid #ccc; padding: 10px; height: 200px; overflow-y: scroll; margin-bottom: 20px; }
+        #message-input { width: 80%; }
+    </style>
+</head>
+<body>
+    <h2>Group Chat</h2>
+    <div id="chat-log"></div>
+    <input id="message-input" placeholder="Type a message..." />
+    <button onclick="sendGroupMessage()">Send</button>
+
+    <h2>Notifications</h2>
+    <div id="notification-log"></div>
+
+    <script>
+        // Replace these with actual values from your app
+        const userId = "6442d0db-e62d-4d41-bc1c-793517e7aa44";  // e.g., "d8f25444-ccba-41db-8268-6b7e6e8e8c3b"
+        const groupId = "778b7f80-1fe3-4844-bb19-473f8a311541";    // e.g., "f4b93e11-6f2d-4c41-bcf8-12c36c32b222"
+        const hostAddr = "172.28.49.0:8000"
+        // USer 218
+        const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ4MTY2MTE3LCJpYXQiOjE3NDgwNzk3MTcsImp0aSI6ImNkMTA1YjYyNjE4MzQyNDQ4YWU2NTQxZTIyY2NmNjIyIiwidXNlcl9pZCI6IjY0NDJkMGRiLWU2MmQtNGQ0MS1iYzFjLTc5MzUxN2U3YWE0NCJ9.TJZDGb85oEW7_8ZlAsHz5I1BLHPb5qoEF3zIZ3k3-FU";
+        const chatSocket = new WebSocket(
+            `ws://${hostAddr}/ws/chat/group_${groupId}/?token=${authToken}`
+        );
+
+        const notifSocket = new WebSocket(
+            `ws://${hostAddr}/ws/notifications/user_${userId}/?token=${authToken}`
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const msg = JSON.stringify(data.message_obj.content || data.message_obj, null, 2);
+            document.getElementById('chat-log').innerHTML += `<div><strong>Message:</strong> ${msg}</div>`;
+        };
+
+        notifSocket.onmessage = function(e) {
+            try {
+                const data = JSON.parse(e.data);
+                const notif = data.notification;
+
+                if (!notif || !notif.type || !notif.sender || !notif.message || !notif.created_at) {
+                    console.warn("Malformed notification data:", data);
+                    return;
+                }
+
+                const content = `<div><strong>${notif.type.toUpperCase()}</strong> from <strong>${notif.sender}</strong>: ${notif.message} <em>${notif.created_at}</em></div>`;
+                document.getElementById('notification-log').innerHTML += content;
+            } catch (err) {
+                console.error("Error handling notification message:", err);
+            }
+        };
+
+
+        function sendGroupMessage() {
+            const content = document.getElementById("message-input").value;
+            if (!content.trim()) return alert("Message is empty.");
+            
+            const messageData = {
+                content: content,
+                group_id: groupId,
+                attachment_ids: [], // Add support if needed
+                reply_to: null
+            };
+
+            chatSocket.send(JSON.stringify(messageData));
+            document.getElementById("message-input").value = "";
+        }
+    </script>
+</body>
+</html>
