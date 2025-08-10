@@ -15,6 +15,7 @@ from chitchat.consumers.sanitize_groupnames import (
     sanitize_group_name,
     sanitize_notification_group_name,
 )
+from asgiref.sync import sync_to_async
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -115,6 +116,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                                 },
                             },
                         )
+                        await self.mark_message_delivered(saved_message.id)
             else:
                 notification = await self.create_message_notification(
                     saved_message, sender, receiver
@@ -135,6 +137,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         },
                     },
                 )
+                await self.mark_message_delivered(saved_message.id)
 
     async def chat_message(self, event):
         await self.send(text_data=json.dumps(event["message"]))
@@ -204,6 +207,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
             return None, None, None
         return message, receiver, group
+
+    @sync_to_async
+    def mark_message_delivered(self, message_id):
+        from chitchat.models import Message
+        try:
+            Message.objects.filter(id= message_id).update(is_read=True)
+        except Message.DoesNotExist:
+            pass
 
     @database_sync_to_async
     def serialize_message(self, message):

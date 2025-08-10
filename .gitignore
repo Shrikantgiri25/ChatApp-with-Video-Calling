@@ -172,9 +172,7 @@ cython_debug/
 
 # projects files and folders
 ER Doc.docx
-chatapp_ERD.png
 config/
 .hintrc
 notes.txt
-testing_templates
 media

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat & Notifications</title>
+    <style>
+        #messages, #notifications {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 200px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Chat App</h2>
+
+    <!-- User IDs input to generate room name -->
+    <label>User 1 ID:</label>
+    <input type="text" id="user1Id" placeholder="Your User ID">
+
+    <label>User 2 ID:</label>
+    <input type="text" id="user2Id" placeholder="Other User ID">
+
+    <button onclick="generateRoomName()">Generate Room Name</button><br><br>
+
+    <label>Room Name:</label>
+    <input type="text" id="roomName" placeholder="e.g. 1_2" readonly>
+    <button onclick="connectChat()">Connect Chat</button>
+
+    <div id="messages"></div>
+
+    <textarea id="messageInput" placeholder="Type your message..."></textarea><br>
+    <input type="text" id="receiverId" placeholder="Receiver ID (for 1-to-1)">
+    <input type="text" id="groupId" placeholder="Group ID (for group chat)">
+    <button onclick="sendMessage()">Send</button>
+
+    <hr>
+
+    <h3>Notifications</h3>
+    <label>User ID:</label>
+    <input type="text" id="userId" placeholder="Current user ID">
+    <button onclick="connectNotifications()">Connect Notifications</button>
+
+    <div id="notifications"></div>
+
+    <script>
+        let chatSocket = null;
+        let notificationSocket = null;
+
+        // Generate room name by sorting two user IDs
+        function generateRoomName() {
+            const user1Id = document.getElementById("user1Id").value;
+            const user2Id = document.getElementById("user2Id").value;
+
+            if (!user1Id || !user2Id) {
+                alert("Both User IDs are required.");
+                return;
+            }
+
+            const id1 = user1Id.trim();
+            const id2 = user2Id.trim();
+
+            // Sort IDs lexicographically; if numeric IDs, parseInt can be used instead
+            const room = [id1, id2].sort();
+            const roomName = `${room[0]}_${room[1]}`;
+            document.getElementById("roomName").value = roomName;
+        }
+
+        function connectChat() {
+            const roomName = document.getElementById('roomName').value;
+            if (!roomName) {
+                alert("Please generate a room name first.");
+                return;
+            }
+
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5MzY5NTA0LCJpYXQiOjE3NDkyODMxMDQsImp0aSI6IjgwNzNhOTI3Y2MyODQ2NWI5NWE3MzAxNGNmMTIwOWYxIiwidXNlcl9pZCI6IjAyZmJkNjcwLTM4MGQtNGZkYS1hODdmLWQ4MGE4NTY5MDU3MCJ9.8zB5cxLfdSnrBih9VOE5M5dKT2ukgPi9RGlYxc8_PO0";
+
+            chatSocket = new WebSocket(`ws://172.28.49.0:8000/ws/chat/${roomName}/?token=${token}`);
+
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                const msgBox = document.getElementById('messages');
+                msgBox.innerHTML += `<p><strong>Message:</strong> ${data.content || JSON.stringify(data)}</p>`;
+                msgBox.scrollTop = msgBox.scrollHeight;
+            };
+
+            chatSocket.onclose = function() {
+                console.error('Chat socket closed unexpectedly');
+            };
+        }
+
+        function sendMessage() {
+            if (!chatSocket || chatSocket.readyState !== WebSocket.OPEN) {
+                alert("Chat socket is not connected.");
+                return;
+            }
+
+            const content = document.getElementById('messageInput').value;
+            const receiver = document.getElementById('receiverId').value;
+            const groupId = document.getElementById('groupId').value;
+
+            const payload = {
+                content: content,
+            };
+
+            if (receiver) payload.receiver = receiver;
+            if (groupId) payload.group_id = groupId;
+
+            chatSocket.send(JSON.stringify(payload));
+            document.getElementById('messageInput').value = '';
+        }
+
+        function connectNotifications() {
+            const userId = document.getElementById('userId').value;
+
+            if (!userId) {
+                alert("Please enter User ID for notifications.");
+                return;
+            }
+
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5MzY5NTA0LCJpYXQiOjE3NDkyODMxMDQsImp0aSI6IjgwNzNhOTI3Y2MyODQ2NWI5NWE3MzAxNGNmMTIwOWYxIiwidXNlcl9pZCI6IjAyZmJkNjcwLTM4MGQtNGZkYS1hODdmLWQ4MGE4NTY5MDU3MCJ9.8zB5cxLfdSnrBih9VOE5M5dKT2ukgPi9RGlYxc8_PO0";
+
+            notificationSocket = new WebSocket(`ws://172.28.49.0:8000/ws/notifications/user_${userId}/?token=${token}`);
+
+            notificationSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                const notifBox = document.getElementById('notifications');
+
+                // Defensive check to avoid undefined error
+                if (data.notification && data.notification.type && data.notification.message) {
+                    notifBox.innerHTML += `<p><strong>${data.notification.type}:</strong> ${data.notification.message}</p>`;
+                } else if (data.type) {
+                    notifBox.innerHTML += `<p><strong>${data.type}:</strong> ${JSON.stringify(data)}</p>`;
+                } else {
+                    notifBox.innerHTML += `<p>${JSON.stringify(data)}</p>`;
+                }
+                notifBox.scrollTop = notifBox.scrollHeight;
+            };
+
+            notificationSocket.onclose = function() {
+                console.error('Notification socket closed unexpectedly');
+            };
+        }
+    </script>
+</body>
+</html>
