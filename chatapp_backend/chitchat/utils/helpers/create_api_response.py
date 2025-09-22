@@ -3,13 +3,20 @@ from rest_framework.response import Response
 
 
 def create_api_response(
-    message, data=None, errors=None, http_status=status.HTTP_200_OK, **kwargs
+    success=True,
+    message="",
+    data=None,
+    errors=None,
+    http_status=status.HTTP_200_OK,
+    **kwargs
 ):
-
-    response = {"message": message}
-    if data:
+    response = {
+        "success": success,
+        "message": message,
+    }
+    if data is not None:
         response["data"] = data
-    if errors:
+    if errors is not None:
         response["errors"] = errors
 
     response.update(kwargs)

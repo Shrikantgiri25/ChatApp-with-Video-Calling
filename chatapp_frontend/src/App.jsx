@@ -1,13 +1,27 @@
 import './App.css'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Login } from './components/auth/Login';
+import Dashboard from './components/dashboard/dashboard';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
   return (
-    <>
-      <div>
-        <h1>Chat App with Video Calling</h1>
-        <p>Welcome to the Chat App!</p>
-      </div>
-    </>
+    <Router>
+      {/* Public Routes */}
+      <Routes>
+        <Route path='/login' element={<Login/>}/>
+      </Routes>
+
+      {/* Protected Routes */}
+      <Routes>
+          <Route path='/' element={
+            <ProtectedRoute>
+              <Dashboard/>
+            </ProtectedRoute>}
+        />
+      </Routes>
+
+    </Router>
   )
 }
 
