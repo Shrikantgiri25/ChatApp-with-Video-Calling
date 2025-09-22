@@ -13,13 +13,13 @@ export default function (state = initial_state, action) {
       return {
         ...state,
         user: payload.user,
-        token: payload.token,
+        // token: payload.token,
       }
     case LOGOUT:
       return {
         ...state,
         user: null,
-        token: null,
+        // token: null,
       }
     // case "REGISTER_SUCCESS":
     //   return {

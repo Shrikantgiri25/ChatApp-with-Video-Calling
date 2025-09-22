@@ -21,6 +21,7 @@ TO_MANY_REQUEST_429 = "Too many requests. Please try again later."
 
 # Common
 SOMETHING_WENT_WRONG = "Something went wrong."
+INVALID_CREDS = "Invalid Credentials"
 LINK_EXPIRED = "Link expired."
 LOGIN_SUCCESSFUL = "Login successful."
 GOOGLE_LOGIN_REDIRECT_URL = "/api/v1/google/token/"
