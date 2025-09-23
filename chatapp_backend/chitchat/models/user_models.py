@@ -37,7 +37,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f"{self.email}"
 
-    # ADD THESE TWO METHODS 👇
+    def set_password(self, raw_password):
+        return super().set_password(raw_password)
+
+    # ADD THESE TWO METHODS
     def has_perm(self, perm, obj=None):
         return self.is_superuser
 
