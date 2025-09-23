@@ -39,3 +39,6 @@ class EnviromentConfigs:
     # REDIS Settings
     REDIS_HOST = configs["REDIS"]["REDIS_HOST"]
     REDIS_PORT = configs["REDIS"]["REDIS_PORT"]
+
+    # FRONTEND Url
+    FRONTEND_URL = configs["FRONTEND_URL"]["FRONTEND_URL"]
