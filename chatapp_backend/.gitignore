@@ -176,3 +176,5 @@ config/
 .hintrc
 notes.txt
 media
+# Django static files
+/staticfiles/

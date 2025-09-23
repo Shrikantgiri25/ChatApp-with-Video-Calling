@@ -44,7 +44,7 @@ class UserEmailVerificationView(APIView):
             return create_api_response(
                 data={"Email": user_email, "token_id": token.id},
                 message=EMAIL_VERIFICATION_SUCCESSFUL,
-                http_status=status.HTTP_204_NO_CONTENT,
+                http_status=status.HTTP_200_OK,
             )
         except ValidationError as e:
             return create_api_response(

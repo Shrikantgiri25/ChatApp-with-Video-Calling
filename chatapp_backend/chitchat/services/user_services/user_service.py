@@ -5,7 +5,7 @@ from chitchat.models.user_models import User
 from rest_framework.exceptions import ValidationError
 from chitchat.serializers.user_serializer import UserSerializer
 from chitchat.utils.helpers.enums import UserStatus
-
+from chitchat.models.user_profile_models import UserProfile
 
 class UserService:
     def create_user(data):
@@ -15,6 +15,7 @@ class UserService:
                 serializer = UserRegistrationSerializer(data=data)
                 if serializer.is_valid():
                     user = serializer.save()
+                    UserProfile.objects.create(user=user)
                     return user
                 else:
                     raise ValidationError(serializer.errors)

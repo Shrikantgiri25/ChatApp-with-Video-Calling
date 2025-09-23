@@ -1,0 +1,58 @@
+@use "./Login.scss";
+
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; // full viewport height
+}
+
+.auth-form.email-verify-form {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; // vertical centering
+  align-items: center;     // horizontal centering
+  height: 100%;            // take full height of parent
+  gap: 20px;
+}
+
+.message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.error-message {
+  margin-top: 1rem;
+  color: red;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.success-message {
+  margin-top: 1rem;
+  color: green;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.back-login-btn {
+  padding: 8px 16px;
+  background-color: #861df7; // keeps your theme color
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.back-login-btn:hover {
+  background-color: #5b0bb5; // slightly darker shade for hover
+}
