@@ -1,48 +1,116 @@
-import React from 'react'
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Button } from "antd";
-import { LoginSchema } from '../../validation/loginValidation';
-import { AuthService } from '../../services/authService';
+import { LoginSchema } from "../../validation/loginValidation";
+import { AuthService } from "../../services/authService";
+import "./Login.scss";
 
-export const Login = () => {
+const Login = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Clear token when visiting login page
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+  }, []);
+
   const INITIAL_VALUES = {
-    email: "", 
-    password: ""
-} 
+    email: "",
+    password: "",
+  };
+
   return (
-    <Formik
-    initialValues={INITIAL_VALUES}
-    validationSchema={LoginSchema}
-    onSubmit={async (values)=> {
-        console.log(values);
-        const response = await AuthService.login(values);
-        const accessToken = response?.access;
-        if (accessToken){
-            localStorage.setItem("access_token", accessToken);
-        }
-        const refreshToken = response?.refresh;
-        if (refreshToken){
-            localStorage.setItem("refresh_token", refreshToken);
-        }
-    }}
-    >
-    {({isSubmitting, isValid}) => (
-        <Form className='form-style'>
-            <div>
-                <label>Email</label>
-                <Field type="email" name="email" placeholder="Enter your email"/>
-                <ErrorMessage name='email' component="div" style={{color: "red"}}/>
-            </div>
-            <div>
-                <label>Password</label>
-                <Field type="password" name="password" placeholder="Enter your password"/>
-                <ErrorMessage name='password' component="div" style={{color: "red"}}/>
-            </div>
-            <Button htmlType='submit' type='primary' disabled={isSubmitting || !isValid}>
-                Login
+    <div className="auth-page">
+      {/* Header (same as code a) */}
+      <div className="dashboard-header">
+        <div className="chatapp-logo">
+          <span className="chatapp-text">Chat{" "}</span>
+          <span className="x-text">Application</span>
+        </div>
+        <h1 className="main-title">Connect Seamlessly</h1>
+      </div>
+
+      <Formik
+        initialValues={INITIAL_VALUES}
+        validationSchema={LoginSchema}
+        validateOnMount
+        onSubmit={async (values, { setSubmitting, setStatus }) => {
+          try {
+            const response = await AuthService.login(values);
+            const accessToken = response?.access;
+            const refreshToken = response?.refresh;
+
+            if (accessToken) {
+              localStorage.setItem("access_token", accessToken);
+            }
+            if (refreshToken) {
+              localStorage.setItem("refresh_token", refreshToken);
+            }
+
+            navigate("/"); // redirect after login
+          } catch (error) {
+            setStatus(error?.response?.data?.message || "Login failed");
+          } finally {
+            setSubmitting(false);
+          }
+        }}
+      >
+        {({ isSubmitting, isValid, status }) => (
+          <Form className="auth-form">
+            <h2>Login</h2>
+
+            <label>Email</label>
+            <Field
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+            />
+            <ErrorMessage
+              name="email"
+              component="div"
+              className="error-message"
+            />
+
+            <label>Password</label>
+            <Field
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+            />
+            <ErrorMessage
+              name="password"
+              component="div"
+              className="error-message"
+            />
+
+            {status && <p className="error-message">{status}</p>}
+
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="submit-button"
+              loading={isSubmitting}
+              disabled={!isValid || isSubmitting}
+              block
+            >
+              Login
             </Button>
-        </Form>
-    )}
-    </Formik>
-  )
-}
+
+            <p className="toggle-text">
+              Don’t have an account?{" "}
+              <span
+                className="toggle-link"
+                onClick={() => navigate("/register")}
+              >
+                Register
+              </span>
+            </p>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
+
+export default Login;
