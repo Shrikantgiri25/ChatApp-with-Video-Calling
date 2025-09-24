@@ -1,5 +1,5 @@
 @use "./Login.scss";
-
+$theme-color: #861df7;
 .auth-page {
   display: flex;
   justify-content: center;
@@ -38,8 +38,8 @@
 }
 
 .success-message {
-  margin-top: 1rem;
-  color: green;
+  margin-top: 3rem;
+  color: $theme-color;
   font-size: 0.9rem;
   text-align: center;
 }

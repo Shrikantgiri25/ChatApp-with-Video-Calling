@@ -1,7 +1,6 @@
 from django.core.mail import send_mail
 from django.core.mail import BadHeaderError
 import smtplib
-from chitchat.utils.env_config import EnviromentConfigs as env
 
 
 class EmailVerificationError(Exception):

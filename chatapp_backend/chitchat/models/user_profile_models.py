@@ -19,19 +19,19 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.full_name}"
 
-    def save(self, *args, **kwargs):
-        if self.id:
-            try:
-                user_instace = UserProfile.objects.get(id=self.id)
-                if (
-                    user_instace.profile_picture
-                    and user_instace.profile_picture != self.profile_picture
-                ):
-                    old_picture_path = os.path.join(
-                        settings.MEDIA_ROOT, user_instace.profile_picture.name
-                    )
-                    if os.path.exists(old_picture_path):
-                        os.remove(old_picture_path)
-            except User.DoesNotExist:
-                pass
-        return super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if self.id:
+    #         try:
+    #             user_instace = UserProfile.objects.get(id=self.id)
+    #             if (
+    #                 user_instace.profile_picture
+    #                 and user_instace.profile_picture != self.profile_picture
+    #             ):
+    #                 old_picture_path = os.path.join(
+    #                     settings.MEDIA_ROOT, user_instace.profile_picture.name
+    #                 )
+    #                 if os.path.exists(old_picture_path):
+    #                     os.remove(old_picture_path)
+    #         except User.DoesNotExist:
+    #             pass
+    #     return super().save(*args, **kwargs)

@@ -3,7 +3,6 @@ import { LOGIN_SUCCESS, LOGOUT } from "../actiontypes/constants";
 
 const initial_state = {
     user: null,
-    token: null,
 }
 
 export default function (state = initial_state, action) {

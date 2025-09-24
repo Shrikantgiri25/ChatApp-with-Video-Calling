@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Button } from "antd";
 import { LoginSchema } from "../../validation/loginValidation";
-import { RegisterSchema } from "../../validation/registerValidation"; // <-- new schema for register
+import { RegisterSchema } from "../../validation/registerValidation";
 import { AuthService } from "../../services/authService";
 import "./Login.scss";
 
@@ -11,18 +11,19 @@ const AuthPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Decide page based on route
+  // Determine if current page is login
   const isLogin = location.pathname === "/login";
 
   useEffect(() => {
-    // Clear tokens on visiting auth pages
+    // Clear tokens when visiting auth pages
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
   }, []);
 
+  // Formik initial values based on page
   const INITIAL_VALUES = isLogin
     ? { email: "", password: "" }
-    : { email: "", fullName: "" };
+    : { email: "", full_name: "" };
 
   return (
     <div className="auth-page">
@@ -39,6 +40,7 @@ const AuthPage = () => {
         initialValues={INITIAL_VALUES}
         validationSchema={isLogin ? LoginSchema : RegisterSchema}
         validateOnMount
+        enableReinitialize
         onSubmit={async (values, { setSubmitting, setStatus, resetForm }) => {
           try {
             if (isLogin) {
@@ -48,15 +50,17 @@ const AuthPage = () => {
               const refreshToken = response?.refresh;
 
               if (accessToken) localStorage.setItem("access_token", accessToken);
-              if (refreshToken)
-                localStorage.setItem("refresh_token", refreshToken);
+              if (refreshToken) localStorage.setItem("refresh_token", refreshToken);
 
-              navigate("/"); // redirect after login
+              navigate("/", { replace: true }); // redirect after login
             } else {
               // Register API
               await AuthService.register(values);
-              setStatus("Verification link has been sent to your email!");
-              resetForm();
+              setStatus("Verification link has been sent to your email!, Redirecting to Login");
+              setTimeout(() => {
+                resetForm({ values: { email: "", full_name: "" }, touched: {}, errors: {} });
+              }, 1500);
+              setTimeout(()=> navigate("/login", { replace: true }), 2000)
             }
           } catch (error) {
             setStatus(error?.response?.data?.message || "Something went wrong");
@@ -69,51 +73,33 @@ const AuthPage = () => {
           <Form className="auth-form">
             <h2>{isLogin ? "Login" : "Register"}</h2>
 
-            {/* Email field (common) */}
+            {/* Email field */}
             <label>Email</label>
             <Field type="email" name="email" placeholder="Enter your email" />
-            <ErrorMessage
-              name="email"
-              component="div"
-              className="error-message"
-            />
+            <ErrorMessage name="email" component="div" className="error-message" />
 
-            {/* Show password only on login */}
+            {/* Password field (only login) */}
             {isLogin && (
               <>
                 <label>Password</label>
-                <Field
-                  type="password"
-                  name="password"
-                  placeholder="Enter your password"
-                />
-                <ErrorMessage
-                  name="password"
-                  component="div"
-                  className="error-message"
-                />
+                <Field type="password" name="password" placeholder="Enter your password" />
+                <ErrorMessage name="password" component="div" className="error-message" />
               </>
             )}
 
-            {/* Show full name only on register */}
+            {/* Full name field (only register) */}
             {!isLogin && (
               <>
                 <label>Full Name</label>
-                <Field
-                  type="text"
-                  name="fullName"
-                  placeholder="Enter your full name"
-                />
-                <ErrorMessage
-                  name="fullName"
-                  component="div"
-                  className="error-message"
-                />
+                <Field type="text" name="full_name" placeholder="Enter your full name" />
+                <ErrorMessage name="full_name" component="div" className="error-message" />
               </>
             )}
 
+            {/* Status message */}
             {status && <p className="status-message">{status}</p>}
 
+            {/* Submit button */}
             <Button
               type="primary"
               htmlType="submit"
@@ -125,6 +111,7 @@ const AuthPage = () => {
               {isLogin ? "Login" : "Register"}
             </Button>
 
+            {/* Toggle link */}
             <p className="toggle-text">
               {isLogin ? "Don’t have an account? " : "Already have an account? "}
               <span

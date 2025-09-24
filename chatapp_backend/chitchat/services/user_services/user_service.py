@@ -8,6 +8,7 @@ from chitchat.utils.helpers.enums import UserStatus
 from chitchat.models.user_profile_models import UserProfile
 
 class UserService:
+    @staticmethod
     def create_user(data):
         try:
             user_instance = User.objects.filter(email=data.get("email")).first()
@@ -15,19 +16,20 @@ class UserService:
                 serializer = UserRegistrationSerializer(data=data)
                 if serializer.is_valid():
                     user = serializer.save()
-                    UserProfile.objects.create(user=user)
+                    UserProfile.objects.update_or_create(user=user)
                     return user
                 else:
                     raise ValidationError(serializer.errors)
             else:
                 if user_instance.status == UserStatus.NOT_VERIFIED:
+
                     return user_instance
                 raise ValidationError("Account with email already exists.")
         except Exception as e:
-            raise Exception(
-                [f"Failed to Create user for email: {data.get('email')}"]
-            ) from e
+            # raise a ValidationError instead of generic Exception
+            raise ValidationError(f"Failed to create user for email: {data.get('email')}") from e
 
+    @staticmethod
     def update_user(data):
         try:
             user_email = data.get("email")

@@ -4,6 +4,6 @@ export const RegisterSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email format")
     .required("Email is required"),
-  fullName: Yup.string()
+  full_name: Yup.string()
     .required("Full name is required"),
 });
