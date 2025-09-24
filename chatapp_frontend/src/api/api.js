@@ -46,7 +46,6 @@ api.interceptors.response.use(
       // Generic error handler for other statuses
       if (error.response) {
         // Server responded with error
-        console.log(error.response)
         const msg =
           error.response.data?.detail ||
           error.response.data?.toast ||

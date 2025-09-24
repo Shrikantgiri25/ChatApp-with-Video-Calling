@@ -24,7 +24,6 @@ const SetPasswordPage = () => {
     password: "",
     confirm_password: "",
   };
-  console.log(token);
   
   return (
     <div className="auth-page">
@@ -52,7 +51,7 @@ const SetPasswordPage = () => {
             if (response?.success) {
               setStatus("Password set successfully! Redirecting to login...");
               resetForm();
-              setTimeout(() => navigate("/login"), 2000);
+              setTimeout(() => navigate("/login", {replace: true}), 2000);
             } else {
               setStatus(response?.message || "Something went wrong");
             }

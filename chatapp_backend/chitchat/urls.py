@@ -12,7 +12,7 @@ from chitchat.views.user_registration_views.complete_user_registration import (
 from chitchat.views.login_views.token_obtain_view import CustomTokenObtainPairView
 from chitchat.views.login_views.token_refresh_view import CustomTokenRefreshView
 from rest_framework.routers import DefaultRouter
-from chitchat.views.user_views.me_view import MeUserView
+from chitchat.views.user_views.user_profile_view import UserProfileView
 from chitchat.views.google_login_view.google_login_token import GoogleLoginTokenView
 from chitchat.views.message_views.message_views import MessageView
 
@@ -37,7 +37,7 @@ api_v1_routes = [
 
     path("google/token/", GoogleLoginTokenView.as_view(), name="google_token"),
     # Fetching current user data
-    path("profile/", MeUserView.as_view(), name="me_user"),
+    path("profile/", UserProfileView.as_view(), name="me_user"),
     # Message related views
     path("message/", MessageView.as_view(), name="message"),
     # router urls

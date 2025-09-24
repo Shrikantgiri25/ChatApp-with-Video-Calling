@@ -2,7 +2,7 @@ from rest_framework import serializers
 from chitchat.models import User, UserProfile
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = [
@@ -14,8 +14,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ["is_online", "last_seen"]  # Keep these readonly if needed
 
 
-class MeUserSerializer(serializers.ModelSerializer):
-    profile = UserProfileSerializer()
+class UserProfileSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()
 
     class Meta:
         model = User

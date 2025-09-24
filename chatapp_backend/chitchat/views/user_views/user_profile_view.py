@@ -1,30 +1,36 @@
 from rest_framework import permissions, throttling
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from chitchat.serializers.me_user_serializers import MeUserSerializer
+from chitchat.serializers.user_profile_serializer import UserProfileSerializer
 from chitchat.utils.helpers.create_api_response import create_api_response
 from rest_framework import status
 from datetime import timedelta
 from chitchat.utils.helpers.enums import UserStatus
 from rest_framework.parsers import MultiPartParser, FormParser
-
-
-class MeUserView(APIView):
+from chitchat.models import User
+import time
+class UserProfileView(APIView):
     """
     View to update user data.
     """
 
-    serializer_class = MeUserSerializer
+    serializer_class = UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
     throttle_classes = [throttling.UserRateThrottle]
     parser_classes = [MultiPartParser, FormParser]
 
     def get(self, request):
-        """
-        Get the current user's data.
-        """
-        user = request.user
+        start = time.time()
+        user = (
+            User.objects.select_related("profile")
+            .only("id", "email", "full_name", "status", 
+                "profile__profile_picture", "profile__bio", 
+                "profile__is_online", "profile__last_seen")
+            .get(pk=request.user.pk)
+        )
         serializer = self.serializer_class(user)
+        end = time.time()
+        print(f"⏱ Backend processing time: {end - start:.2f} seconds")
         return create_api_response(
             data=serializer.data,
             message="User data retrieved successfully",

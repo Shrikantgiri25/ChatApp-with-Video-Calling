@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Spin } from "antd";
-import { LoadingOutlined } from '@ant-design/icons';
+
 import "./EmailVerify.scss";
 import { AuthService } from "../../services/authService";
+import LoadingScreen from "../spinner/Spinner";
 
 const EmailVerifyPage = () => {
   const { token } = useParams();
@@ -12,9 +12,6 @@ const EmailVerifyPage = () => {
   const [status, setStatus] = useState("verifying"); // "verifying" | "success" | "error"
   const [message, setMessage] = useState("");
   const called = useRef(false);
-
-  // Create a large spinner icon
-  const antIcon = <LoadingOutlined style={{ fontSize: 64, color: "#861df7" }} spin />;
 
   useEffect(() => {
     if (called.current) return;
@@ -46,7 +43,7 @@ const EmailVerifyPage = () => {
       <div className="auth-form email-verify-form">
         {status === "verifying" && (
           <div className="spinner-container">
-            <Spin indicator={antIcon} />
+            <LoadingScreen/>
             <h2>Verifying your email...</h2>
           </div>
         )}

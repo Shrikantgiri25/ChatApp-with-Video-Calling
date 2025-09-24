@@ -12,24 +12,31 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-from chitchat.utils.env_config import EnviromentConfigs as env
 from datetime import timedelta
 from chitchat.utils.helpers.constants import GOOGLE_LOGIN_REDIRECT_URL
+import environ
+import os
+from datetime import timedelta
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.SECRET_KEY
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.DEBUG_VALUE
+DEBUG = env("DEBUG_VALUE")
 
-ALLOWED_HOSTS = [env.ALLOWED_HOSTS]
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 
 # Application definition
@@ -69,16 +76,17 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "user": env.USER_THROTTLE_LIMIT,
-        "anon": env.ANON_THROTTLE_LIMIT,
+        "user": env("USER_THROTTLE_LIMIT"),
+        "anon": env("ANON_THROTTLE_LIMIT"),
     },
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
 }
+
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=int(env.JWT_TOKEN_LIFETIME)),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=int(env.JWT_REFRESH_TOKEN_LIFETIME)),
-    "ROTATE_REFRESH_TOKENS": env.ROTATE_REFRESH_TOKEN,
-    "BLACKLIST_AFTER_ROTATION": env.BLACKLIST_AFTER_ROTATION,
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=int(env("JWT_TOKEN_LIFETIME"))),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=int(env("JWT_REFRESH_TOKEN_LIFETIME"))),
+    "ROTATE_REFRESH_TOKENS": env.bool("ROTATE_REFRESH_TOKEN", default=True),
+    "BLACKLIST_AFTER_ROTATION": env.bool("BLACKLIST_AFTER_ROTATION", default=True),
 }
 
 MIDDLEWARE = [
@@ -119,52 +127,50 @@ ASGI_APPLICATION = "chatapp_with_videocalling.asgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": env.ENGINE,
-        "NAME": env.NAME,
-        "USER": env.USER,
-        "PASSWORD": env.PASSWORD,
-        "HOST": env.HOST,
-        "PORT": env.PORT,
+    'default': {
+        'ENGINE': env("DB_ENGINE"),
+        'NAME': env("DB_NAME"),
+        'USER': env("DB_USER"),
+        'PASSWORD': env("DB_PASSWORD"),
+        'HOST': env("DB_HOST"),
+        'PORT': env("DB_PORT"),
     }
 }
+
+
+# settings.py
 
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "[{levelname}] {asctime} {name} - {message}",
+            "format": "[{levelname}] {asctime} {name}: {message}",
             "style": "{",
         },
-        "simple": {
-            "format": "[{levelname}] {message}",
-            "style": "{",
-        },
+        "simple": {"format": "[{levelname}] {message}", "style": "{"},
     },
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
-        "file": {
-            "class": "logging.FileHandler",
-            "filename": os.path.join(BASE_DIR, "logs/chatapp.log"),
-            "formatter": "verbose",
-        },
     },
     "loggers": {
-        "django": {
+        # Catch all logs from your app
+        "chitchat": {
             "handlers": ["console"],
-            "level": "INFO",
-        },
-        "chitchat": {  # your app logger
-            "handlers": ["console", "file"],
             "level": "INFO",
             "propagate": False,
         },
+        # Root logger
+        "": {
+            "handlers": ["console"],
+            "level": "INFO",
+        },
     },
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -219,15 +225,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-# Email Settings
-EMAIL_BACKEND = env.EMAIL_BACKEND
-EMAIL_HOST = env.EMAIL_HOST
-EMAIL_PORT = env.EMAIL_PORT
-EMAIL_USE_TLS = env.EMAIL_USE_TLS
-EMAIL_HOST_USER = env.EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = env.EMAIL_HOST_PASSWORD
-DEFAULT_FROM_EMAIL = env.EMAIL_HOST_USER
+FRONTEND_URL = env("FRONTEND_URL")
 
+# Email Settings
+EMAIL_BACKEND = env("EMAIL_BACKEND")
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_PORT = env("EMAIL_PORT")
+EMAIL_USE_TLS = env("EMAIL_USE_TLS")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = env("EMAIL_HOST_USER")
 
 # Custom user for the APP
 AUTH_USER_MODEL = "chitchat.User"
@@ -261,14 +268,16 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(env.REDIS_HOST, int(env.REDIS_PORT))],
+            "hosts": [(env("REDIS_HOST"), int(env("REDIS_PORT")))],
         },
     },
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173"
-]
+# CORS Settings
+CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGIN")
 
 CORS_ALLOW_CREDENTIALS = True
+
+# settings.py
+CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")

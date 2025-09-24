@@ -16,7 +16,9 @@ from chitchat.services.email_services.send_email_verification_link import (
     send_email_verification_link,
 )
 from chitchat.services.user_services.user_service import UserService
+import logging
 
+logger = logging.getLogger(__name__)
 
 class UserRegistrationViewSet(viewsets.ModelViewSet):
     serializer_class = UserRegistrationSerializer
@@ -26,21 +28,32 @@ class UserRegistrationViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         try:
+            logger.info(f"Request for creating user")
             user = UserService.create_user(request.data)
+
+            logger.info(f"Userservice created user successfully: {user.email}")
             activation_link = generate_email_verification_link(user=user)
+            
+            logger.info(f"Email verification link generated for user: {user.email}")
+            # TODO: Add Celery for Background mail Processing with redis
             mail_sent_status = send_email_verification_link(user, activation_link)
+            
+            
+            logger.info(f"Email sent for user: {user.email}")
             return create_api_response(
                 message=EMAIL_VERIFICATION_SENT,
                 data={"Email": user.email},
                 http_status=status.HTTP_201_CREATED,
             )
         except Throttled as e:
+            logger.error(f"Throttle limit exceeded by user: {request.data.get('email')}")
             return create_api_response(
                 message=TO_MANY_REQUEST_429,
                 http_status=status.HTTP_429_TOO_MANY_REQUESTS,
                 errors=str(e),
             )
         except Exception as e:
+            logger.error(f"An unexpected error occurred for user: {request.data.get('email')}")
             return create_api_response(
                 message=USER_REGISTRATION_FAILED,
                 http_status=status.HTTP_500_INTERNAL_SERVER_ERROR,
