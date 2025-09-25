@@ -31,18 +31,26 @@ class UserProfileSerializer(serializers.ModelSerializer):
         ]  # Optional: Make email read-only if it shouldn't change
 
     def update(self, instance, validated_data):
-        # Extract profile data
         profile_data = validated_data.pop("profile", {})
 
-        # Update User fields
+        # Track changed fields for User
+        user_fields = []
         for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
+            if getattr(instance, attr) != value:
+                setattr(instance, attr, value)
+                user_fields.append(attr)
+        if user_fields:
+            instance.save(update_fields=user_fields)
 
-        # Update related UserProfile fields
+        # Track changed fields for Profile
         profile = instance.profile
+        profile_fields = []
         for attr, value in profile_data.items():
-            setattr(profile, attr, value)
-        profile.save()
+            if getattr(profile, attr) != value:
+                setattr(profile, attr, value)
+                profile_fields.append(attr)
+        if profile_fields:
+            profile.save(update_fields=profile_fields)
 
         return instance
+

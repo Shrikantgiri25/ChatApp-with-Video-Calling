@@ -19,7 +19,7 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     // Unauthorized → try refresh token
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 || error.response?.status === 403) {
       const refreshToken = localStorage.getItem("refresh_token");
 
       if (refreshToken && window.location.pathname !== "/login") {

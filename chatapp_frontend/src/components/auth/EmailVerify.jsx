@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import "./EmailVerify.scss";
 import { AuthService } from "../../services/authService";
-import LoadingScreen from "../spinner/Spinner";
+import LoadingScreen from "../Spinner/Spinner";
 
 const EmailVerifyPage = () => {
   const { token } = useParams();

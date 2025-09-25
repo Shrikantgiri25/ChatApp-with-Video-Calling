@@ -1,17 +1,18 @@
-from rest_framework import permissions, throttling
+from rest_framework import permissions, throttling, status
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from chitchat.serializers.user_profile_serializer import UserProfileSerializer
-from chitchat.utils.helpers.create_api_response import create_api_response
-from rest_framework import status
-from datetime import timedelta
-from chitchat.utils.helpers.enums import UserStatus
 from rest_framework.parsers import MultiPartParser, FormParser
 from chitchat.models import User
-import time
+from chitchat.serializers.user_profile_serializer import UserProfileSerializer
+from chitchat.utils.helpers.create_api_response import create_api_response
+from chitchat.utils.helpers.enums import UserStatus
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 class UserProfileView(APIView):
     """
-    View to update user data.
+    View to retrieve and update user data.
     """
 
     serializer_class = UserProfileSerializer
@@ -20,48 +21,88 @@ class UserProfileView(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
     def get(self, request):
-        start = time.time()
-        user = (
-            User.objects.select_related("profile")
-            .only("id", "email", "full_name", "status", 
-                "profile__profile_picture", "profile__bio", 
-                "profile__is_online", "profile__last_seen")
-            .get(pk=request.user.pk)
-        )
-        serializer = self.serializer_class(user)
-        end = time.time()
-        print(f"⏱ Backend processing time: {end - start:.2f} seconds")
-        return create_api_response(
-            data=serializer.data,
-            message="User data retrieved successfully",
-            http_status=status.HTTP_200_OK,
-        )
-
-    def patch(self, request):
-        """
-        Update the current user's data.
-        """
-        user = request.user
-        data = request.data
-        if user.status == "NEW_USER":
-            data["status"] = UserStatus.ACTIVE
-        if user.status == "INACTIVE":
-            return create_api_response(
-                message="User account is inactive.",
-                errors={"status": "User account is inactive."},
-                http_status=status.HTTP_403_FORBIDDEN,
+        try:
+            logger.info(f"[GET] Request for user profile: {request.user.email}")
+            user = (
+                User.objects.select_related("profile")
+                .only(
+                    "id",
+                    "email",
+                    "full_name",
+                    "status",
+                    "profile__profile_picture",
+                    "profile__bio",
+                    "profile__is_online",
+                    "profile__last_seen",
+                )
+                .get(pk=request.user.pk)
             )
-        serializer = self.serializer_class(user, data=data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
+            serializer = self.serializer_class(user)
+            logger.info(f"[GET] Fetched profile successfully for: {user.email}")
             return create_api_response(
                 data=serializer.data,
-                message="User data updated successfully",
+                message="User data retrieved successfully",
                 http_status=status.HTTP_200_OK,
             )
+        except User.DoesNotExist:
+            logger.error(f"[GET] User not found: {request.user.email}")
+            return create_api_response(
+                message="User not found.",
+                errors={"user": "No user exists with the provided credentials."},
+                http_status=status.HTTP_404_NOT_FOUND,
+            )
+        except Exception as e:
+            logger.exception(f"[GET] Unexpected error for user {request.user.email}: {e}")
+            return create_api_response(
+                message="An unexpected error occurred while fetching user data.",
+                errors={"detail": str(e)},
+                http_status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
-        return create_api_response(
-            message="Failed to update user data",
-            errors=serializer.errors,
-            http_status=status.HTTP_400_BAD_REQUEST,
-        )
+    def patch(self, request):
+        try:
+            user = request.user
+            logger.info(f"[PATCH] Request for updating user profile: {user.email}")
+
+            if user.status == "INACTIVE":
+                logger.warning(f"[PATCH] Inactive user attempted update: {user.email}")
+                return create_api_response(
+                    message="User account is inactive.",
+                    errors={"status": "User account is inactive."},
+                    http_status=status.HTTP_403_FORBIDDEN,
+                )
+
+            # Make a mutable copy of request.data
+            data = request.data.copy()
+
+            # Automatically activate NEW_USER
+            if user.status == "NEW_USER":
+                logger.debug(f"[PATCH] Updating status to ACTIVE for: {user.email}")
+                data["status"] = UserStatus.ACTIVE
+
+            serializer = self.serializer_class(user, data=data, partial=True)
+
+            if serializer.is_valid():
+                serializer.save()
+                logger.info(f"[PATCH] Profile updated successfully for: {user.email}")
+                return create_api_response(
+                    data=serializer.data,
+                    message="User data updated successfully",
+                    http_status=status.HTTP_200_OK,
+                )
+
+            # If serializer validation fails
+            logger.error(f"[PATCH] Validation errors for {user.email}: {serializer.errors}")
+            return create_api_response(
+                message="Failed to update user data",
+                errors=serializer.errors,
+                http_status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        except Exception as e:
+            logger.exception(f"[PATCH] Unexpected error for user {user.email}: {e}")
+            return create_api_response(
+                message="An unexpected error occurred while updating user data.",
+                errors={"detail": str(e)},
+                http_status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
