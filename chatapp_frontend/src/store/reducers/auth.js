@@ -11,7 +11,7 @@ export default function (state = initial_state, action) {
     case LOGIN_SUCCESS:
       return {
         ...state,
-        user: payload.user,
+          user: payload,
         // token: payload.token,
       }
     case LOGOUT:

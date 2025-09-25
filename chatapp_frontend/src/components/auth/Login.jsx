@@ -52,7 +52,7 @@ const AuthPage = () => {
               if (accessToken) localStorage.setItem("access_token", accessToken);
               if (refreshToken) localStorage.setItem("refresh_token", refreshToken);
 
-              navigate("/", { replace: true }); // redirect after login
+              navigate("/dashboard", { replace: true }); // redirect after login
             } else {
               // Register API
               await AuthService.register(values);
