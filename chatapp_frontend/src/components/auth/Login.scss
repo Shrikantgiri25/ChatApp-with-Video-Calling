@@ -1,3 +1,4 @@
+@use 'sass:color';
 // Theme color
 $theme-color: #861df7;
 
@@ -28,12 +29,12 @@ $desktop: 1200px;
 
   &:disabled {
     cursor: not-allowed;
-    background: darken($theme-color, 30%); // optional lighter bg
+     background: color.scale($theme-color, $lightness: -30%);
     color: #ffffff;
   }
 
   &:not(:disabled):hover {
-    background: darken($theme-color, 10%);
+    background: color.scale($theme-color, $lightness: -10%);
     transform: translateY(-1px);
   }
 
@@ -168,10 +169,11 @@ $desktop: 1200px;
       font-size: 1.1rem;
     }
 
-    &:hover {
-      background: darken($theme-color, 10%);
-      transform: translateY(-1px);
-    }
+      &:hover {
+        /* darken by 10% */
+        background: color.scale($theme-color, $lightness: -10%);
+        transform: translateY(-1px);
+      }
 
     &:active {
       transform: translateY(0);
@@ -195,10 +197,10 @@ $desktop: 1200px;
       font-weight: 600;
       transition: all 0.2s ease;
 
-      &:hover {
-        text-decoration: underline;
-        color: darken($theme-color, 10%);
-      }
+    &:hover {
+      text-decoration: underline;
+      color: color.scale($theme-color, $lightness: -10%);
+    }
     }
   }
 

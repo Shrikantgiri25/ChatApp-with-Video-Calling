@@ -1,0 +1,110 @@
+@use 'sass:color';
+
+// Theme color
+$theme-color: #861df7;
+
+// Responsive breakpoints
+$mobile: 768px;
+$tablet: 1024px;
+$desktop: 1200px;
+
+.main-layout {
+  min-height: 100vh;
+
+  // Ensure sidebar children are flex-column
+  .ant-layout-sider-children {
+    display: flex !important; 
+    flex-direction: column !important; 
+    justify-content: space-between !important; 
+    flex-wrap: nowrap !important;
+  }
+
+  .sidebar {
+    background: #1e1e1e;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem 0;
+
+    .menu-main {
+      background: #1e1e1e;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      
+      .ant-menu-item {
+        color: white;
+        display: flex;
+        justify-content: center;
+
+        &:hover {
+          background: color.scale($theme-color, $lightness: -10%);
+        }
+
+        &.ant-menu-item-selected {
+          background: $theme-color;
+        }
+      }
+    }
+
+    .menu-profile {
+      background: #1e1e1e;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+          .ant-menu-item {
+            padding-left: 15px !important; // remove left padding
+
+        .ant-menu-item-icon {
+            margin: 0 !important; // remove any default margin
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }}
+      .profile-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba($theme-color, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: scale(1.1);
+          box-shadow: 0 0 10px rgba($theme-color, 0.6);
+        }
+      }
+    }
+  }
+
+  .content {
+    margin: 0;
+    padding: 1rem;
+    background: #2d2d2d;
+  }
+
+  // --- Responsive adjustments ---
+  @media (max-width: $mobile - 1px) {
+    .sidebar {
+      padding: 0.5rem 0;
+
+      .menu-main {
+        gap: 0.5rem;
+      }
+
+      .menu-profile {
+        .profile-img {
+          width: 28px;
+          height: 28px;
+        }
+      }
+    }
+  }
+
+  @media (min-width: $desktop) {
+    .sidebar {
+      padding: 2rem 0;
+    }
+  }
+}

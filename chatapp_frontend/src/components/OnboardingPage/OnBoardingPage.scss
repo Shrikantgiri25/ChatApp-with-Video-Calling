@@ -1,3 +1,4 @@
+@use 'sass:color';
 // Theme color
 $theme-color: #861df7;
 
@@ -149,7 +150,7 @@ $desktop: 1200px;
         transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
 
         &:hover {
-          background: lighten($theme-color, 35%);
+          background: color.scale($theme-color, $lightness: -35%);
           transform: scale(1.2);
           box-shadow: 0 0 5px rgba(134, 29, 247, 0.6);
         }
@@ -178,12 +179,12 @@ $desktop: 1200px;
 
     &:disabled {
       cursor: not-allowed;
-      background: darken($theme-color, 30%);
+      background: color.scale($theme-color, $lightness: -30%);
       color: #ffffff;
     }
 
     &:not(:disabled):hover {
-      background: darken($theme-color, 10%);
+      background: color.scale($theme-color, $lightness: -10%);
       transform: translateY(-1px);
     }
 
