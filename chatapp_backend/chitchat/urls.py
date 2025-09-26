@@ -15,7 +15,8 @@ from rest_framework.routers import DefaultRouter
 from chitchat.views.user_views.user_profile_view import UserProfileView
 from chitchat.views.google_login_view.google_login_token import GoogleLoginTokenView
 from chitchat.views.message_views.message_views import MessageView
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 # Initialize the router
 router = DefaultRouter()
@@ -43,3 +44,5 @@ api_v1_routes = [
     # router urls
     path("", include(router.urls)),
 ]
+if settings.DEBUG:
+    api_v1_routes += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
