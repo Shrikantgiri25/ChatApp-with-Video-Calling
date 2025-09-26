@@ -31,7 +31,7 @@ $desktop: 1200px;
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      
+
       .ant-menu-item {
         color: white;
         display: flex;
@@ -44,6 +44,10 @@ $desktop: 1200px;
         &.ant-menu-item-selected {
           background: $theme-color;
         }
+
+        .anticon {
+          font-size: 24px;
+        }
       }
     }
 
@@ -52,15 +56,18 @@ $desktop: 1200px;
       display: flex;
       justify-content: center;
       margin-bottom: 1rem;
-          .ant-menu-item {
-            padding-left: 15px !important; // remove left padding
+
+      .ant-menu-item {
+        padding-left: 15px !important;
 
         .ant-menu-item-icon {
-            margin: 0 !important; // remove any default margin
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }}
+          margin: 0 !important;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+
       .profile-img {
         width: 40px;
         height: 40px;
@@ -78,10 +85,19 @@ $desktop: 1200px;
     }
   }
 
+  // Middle pane
+  .middle-pane {
+    width: 35%;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+  }
+
   .content {
     margin: 0;
     padding: 1rem;
     background: #2d2d2d;
+    flex: 1;
   }
 
   // --- Responsive adjustments ---
@@ -91,6 +107,10 @@ $desktop: 1200px;
 
       .menu-main {
         gap: 0.5rem;
+
+        .anticon {
+          font-size: 20px;
+        }
       }
 
       .menu-profile {
@@ -99,6 +119,10 @@ $desktop: 1200px;
           height: 28px;
         }
       }
+    }
+
+    .middle-pane {
+      width: 35%; // a bit bigger for mobile
     }
   }
 

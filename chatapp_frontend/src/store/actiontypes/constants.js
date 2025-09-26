@@ -2,4 +2,5 @@
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGOUT = "LOGOUT";
+export const FETCH_USER_CHATS = "FETCH_USER_CHATS";
 // export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
