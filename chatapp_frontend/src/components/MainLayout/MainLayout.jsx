@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Layout, Menu, Tooltip } from "antd";
 import { Outlet, useLocation } from "react-router-dom";
-import { MessageOutlined, PhoneOutlined, ExperimentOutlined } from '@ant-design/icons';
+import { MessageOutlined, PhoneOutlined, ExperimentOutlined, ContactsFilled } from '@ant-design/icons';
 import { useSelector } from "react-redux";
 import { UserProfileDetails } from '../../store/selectors/authselectors';
 import ChatListPane from '../MiddlePane/ChatListPane/ChatListPane';
 import CallListPane from '../MiddlePane/CallListPane/CallListPane';
 import ProfilePane from '../MiddlePane/PorfilePane/ProfilePane';
 import "./MainLayout.scss";
-
+import { UserAddOutlined } from '@ant-design/icons';
 const { Sider, Content } = Layout;
 
 const MainLayout = () => {
@@ -24,9 +24,13 @@ const MainLayout = () => {
   );
 
   const userProfileData = useSelector(UserProfileDetails);
-  const userProfilePicture = userProfileData && `${import.meta.env.VITE_API_BASE_URL}${userProfileData?.profile?.profile_picture}`;
-  
+
   const [selectedTab, setSelectedTab] = useState("chats");
+  const userProfilePicture = userProfileData?.profile?.profile_picture ? <img 
+                      src={`${import.meta.env.VITE_API_BASE_URL}${userProfileData?.profile?.profile_picture}`} 
+                      alt="Profile" 
+                      className="profile-img"
+                    /> : <UserAddOutlined className={`profile-icon ${selectedTab === 'profile' ? 'selected' : ''}`} />
 
   return (
     <Layout className="main-layout">
@@ -54,6 +58,15 @@ const MainLayout = () => {
                 }
               />
               <Menu.Item 
+                key="contacts" 
+                onClick={()=> setSelectedTab("contacts")}
+                icon={
+                  <Tooltip title="Contacts" placement="right">
+                    <ContactsFilled />
+                  </Tooltip>
+                }
+              />
+              <Menu.Item 
                 key="chatbot" 
                 disabled
                 icon={
@@ -70,11 +83,7 @@ const MainLayout = () => {
                 onClick={()=> setSelectedTab("profile")}
                 icon={
                   <Tooltip title="Profile" placement="right">
-                    <img 
-                      src={userProfilePicture || "https://via.placeholder.com/32"} 
-                      alt="Profile" 
-                      className="profile-img"
-                    />
+                    {userProfilePicture}
                   </Tooltip>
                 }
               />
@@ -85,6 +94,7 @@ const MainLayout = () => {
           <div className="middle-pane">
             {selectedTab === "chats" && <ChatListPane />}
             {selectedTab === "calls" && <CallListPane />}
+            {selectedTab === "contacts" && <ChatListPane />}
             {selectedTab === "profile" && <ProfilePane />}
           </div>
         </>
