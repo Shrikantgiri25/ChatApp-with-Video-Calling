@@ -15,6 +15,7 @@ from rest_framework.routers import DefaultRouter
 from chitchat.views.user_views.user_profile_view import UserProfileView
 from chitchat.views.google_login_view.google_login_token import GoogleLoginTokenView
 from chitchat.views.message_views.message_views import MessageView
+from chitchat.views.user_chat_history.user_chat_history_view import UserChatHistoryView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -41,6 +42,9 @@ api_v1_routes = [
     path("profile/", UserProfileView.as_view(), name="me_user"),
     # Message related views
     path("message/", MessageView.as_view(), name="message"),
+
+    # Conversation history of User
+    path("user/chats/", UserChatHistoryView.as_view(), name="message"),
     # router urls
     path("", include(router.urls)),
 ]
