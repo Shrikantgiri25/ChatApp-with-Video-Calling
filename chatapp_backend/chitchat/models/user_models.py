@@ -37,8 +37,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f"{self.email}"
 
-    def set_password(self, raw_password):
-        return super().set_password(raw_password)
+    # For saving hashed passwords
+    def save(self, *args, **kwargs):
+        if self.password and not self.password.startswith(('pbkdf2_sha256$', 'bcrypt$', 'argon2')):
+            self.password = make_password(self.password)
+        super().save(*args, **kwargs)
 
     # ADD THESE TWO METHODS
     def has_perm(self, perm, obj=None):

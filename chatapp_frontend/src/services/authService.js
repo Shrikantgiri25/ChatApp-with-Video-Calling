@@ -2,11 +2,12 @@ import api from '../api/api';
 import { apiNoAuth } from '../api/api';
 export const AuthService = {
   login: async (userData) => {
+    // eslint-disable-next-line no-useless-catch
     try {
       const response = await api.post("/login/", userData);
       return response.data;
-    } catch {
-      return null; // error interceptor already handles toast
+    } catch(error) {
+      throw error; // error interceptor already handles toast
     }
   },
 
