@@ -23,7 +23,7 @@ class UserChatHistoryView(APIView):
                     conversation=OuterRef("pk")
                 ).order_by("-created_at").values("content")[:1]
             )
-            converation_list = Conversation.objects.filter(Q(user_one__id=user_id) | Q(user_two__id=user_id) | Q(group__members__id= user_id)).order_by("-updated_at")
+            converation_list = Conversation.objects.filter(Q(user_one__id=user_id) | Q(user_two__id=user_id) | Q(group__members__id= user_id)).select_related("user_one", "user_two", "group").prefetch_related("group__members").order_by("-updated_at")
             finally_queryset = converation_list.annotate(unread_message_count=Count("messages", filter=Q(messages__is_read=False) & ~Q(messages__sender_id=user_id)), last_message=Subquery(last_message_subquery))
             serialzer = self.serializer_class(finally_queryset, many=True)
             logger.info(f"Fetched chat history of user: {user_id}")

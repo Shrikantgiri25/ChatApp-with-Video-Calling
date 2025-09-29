@@ -40,7 +40,7 @@ api.interceptors.response.use(
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         toast.error("Unauthorized. Please log in.");
-        window.location.href = "/login";
+        if (window.location.pathname !== "/login") window.location.href = "/login";
       }
     } else {
       // Generic error handler for other statuses

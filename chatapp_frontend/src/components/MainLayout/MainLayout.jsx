@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Layout, Menu, Tooltip } from "antd";
 import { Outlet, useLocation } from "react-router-dom";
-import { MessageOutlined, PhoneOutlined, ExperimentOutlined, ContactsFilled } from '@ant-design/icons';
+import { MessageOutlined, PhoneOutlined, ExperimentOutlined, ContactsOutlined } from '@ant-design/icons';
 import { useSelector } from "react-redux";
 import { UserProfileDetails } from '../../store/selectors/authselectors';
 import ChatListPane from '../MiddlePane/ChatListPane/ChatListPane';
@@ -9,6 +9,7 @@ import CallListPane from '../MiddlePane/CallListPane/CallListPane';
 import ProfilePane from '../MiddlePane/PorfilePane/ProfilePane';
 import "./MainLayout.scss";
 import { UserAddOutlined } from '@ant-design/icons';
+
 const { Sider, Content } = Layout;
 
 const MainLayout = () => {
@@ -49,20 +50,21 @@ const MainLayout = () => {
                 }
               />
               <Menu.Item 
-                key="calls" 
-                onClick={()=> setSelectedTab("calls")}
-                icon={
-                  <Tooltip title="Calls" placement="right">
-                    <PhoneOutlined />
-                  </Tooltip>
-                }
-              />
-              <Menu.Item 
                 key="contacts" 
                 onClick={()=> setSelectedTab("contacts")}
                 icon={
                   <Tooltip title="Contacts" placement="right">
-                    <ContactsFilled />
+                    <ContactsOutlined />
+                  </Tooltip>
+                }
+              />
+              <Menu.Item 
+                key="calls"
+                disabled 
+                onClick={()=> setSelectedTab("calls")}
+                icon={
+                  <Tooltip title="Calls" placement="right">
+                    <PhoneOutlined style={{ color: "rgba(229, 29, 247, 0.2)" }} />
                   </Tooltip>
                 }
               />

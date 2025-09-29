@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
     "channels",
+    "drf_yasg",
 ]
 
 AUTHENTICATION_BACKENDS = [
