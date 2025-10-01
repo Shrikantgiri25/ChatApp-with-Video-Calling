@@ -1,0 +1,522 @@
+[
+  {
+    "model": "chitchat.user",
+    "pk": "11111111-1111-1111-1111-111111111111",
+    "fields": {
+      "full_name": "John Doe",
+      "email": "john@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:00:00Z",
+      "updated_at": "2025-09-29T10:00:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "22222222-2222-2222-2222-222222222222",
+    "fields": {
+      "full_name": "Alice Smith",
+      "email": "alice@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:05:00Z",
+      "updated_at": "2025-09-29T10:05:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "33333333-3333-3333-3333-333333333333",
+    "fields": {
+      "full_name": "Bob Johnson",
+      "email": "bob@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:10:00Z",
+      "updated_at": "2025-09-29T10:10:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "44444444-4444-4444-4444-444444444444",
+    "fields": {
+      "full_name": "Catherine Lee",
+      "email": "catherine@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:15:00Z",
+      "updated_at": "2025-09-29T10:15:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "55555555-5555-5555-5555-555555555555",
+    "fields": {
+      "full_name": "David Kim",
+      "email": "david@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:20:00Z",
+      "updated_at": "2025-09-29T10:20:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "66666666-6666-6666-6666-666666666666",
+    "fields": {
+      "full_name": "Emily Davis",
+      "email": "emily@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:25:00Z",
+      "updated_at": "2025-09-29T10:25:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "77777777-7777-7777-7777-777777777777",
+    "fields": {
+      "full_name": "Frank Miller",
+      "email": "frank@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:30:00Z",
+      "updated_at": "2025-09-29T10:30:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "88888888-8888-8888-8888-888888888888",
+    "fields": {
+      "full_name": "Grace Taylor",
+      "email": "grace@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:35:00Z",
+      "updated_at": "2025-09-29T10:35:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "99999999-9999-9999-9999-999999999999",
+    "fields": {
+      "full_name": "Henry White",
+      "email": "henry@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:40:00Z",
+      "updated_at": "2025-09-29T10:40:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "fields": {
+      "full_name": "Isabella Green",
+      "email": "isabella@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:45:00Z",
+      "updated_at": "2025-09-29T10:45:00Z"
+    }
+  },
+    {
+    "model": "chitchat.userprofile",
+    "pk": "11111111-1111-1111-1111-111111111111",
+    "fields": {
+      "user": "11111111-1111-1111-1111-111111111111",
+      "bio": "Hi, I am John",
+      "is_online": true,
+      "last_seen": "2025-09-29T12:00:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "22222222-2222-2222-2222-222222222222",
+    "fields": {
+      "user": "22222222-2222-2222-2222-222222222222",
+      "bio": "Hello, I am Alice",
+      "is_online": false,
+      "last_seen": "2025-09-29T12:10:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "33333333-3333-3333-3333-333333333333",
+    "fields": {
+      "user": "33333333-3333-3333-3333-333333333333",
+      "bio": "Hey, I am Bob",
+      "is_online": true,
+      "last_seen": "2025-09-29T12:15:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "44444444-4444-4444-4444-444444444444",
+    "fields": {
+      "user": "44444444-4444-4444-4444-444444444444",
+      "bio": "Hello, Catherine here",
+      "is_online": false,
+      "last_seen": "2025-09-29T12:20:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "55555555-5555-5555-5555-555555555555",
+    "fields": {
+      "user": "55555555-5555-5555-5555-555555555555",
+      "bio": "David in the house",
+      "is_online": true,
+      "last_seen": "2025-09-29T12:25:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "66666666-6666-6666-6666-666666666666",
+    "fields": {
+      "user": "66666666-6666-6666-6666-666666666666",
+      "bio": "Emily here!",
+      "is_online": false,
+      "last_seen": "2025-09-29T12:30:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "77777777-7777-7777-7777-777777777777",
+    "fields": {
+      "user": "77777777-7777-7777-7777-777777777777",
+      "bio": "Frank reporting",
+      "is_online": true,
+      "last_seen": "2025-09-29T12:35:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "88888888-8888-8888-8888-888888888888",
+    "fields": {
+      "user": "88888888-8888-8888-8888-888888888888",
+      "bio": "Grace here",
+      "is_online": false,
+      "last_seen": "2025-09-29T12:40:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "99999999-9999-9999-9999-999999999999",
+    "fields": {
+      "user": "99999999-9999-9999-9999-999999999999",
+      "bio": "Henry here",
+      "is_online": true,
+      "last_seen": "2025-09-29T12:45:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "fields": {
+      "user": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "bio": "Isabella in chat",
+      "is_online": false,
+      "last_seen": "2025-09-29T12:50:00Z",
+      "profile_picture": null
+    }
+  },
+    {
+    "model": "chitchat.user",
+    "pk": "21111111-1111-1111-1111-111111111111",
+    "fields": {
+      "full_name": "John DoeX",
+      "email": "john1@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:00:00Z",
+      "updated_at": "2025-09-29T10:00:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "32222222-2222-2222-2222-222222222222",
+    "fields": {
+      "full_name": "Alice SmithX",
+      "email": "alice1@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:05:00Z",
+      "updated_at": "2025-09-29T10:05:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "43333333-3333-3333-3333-333333333333",
+    "fields": {
+      "full_name": "Bob JohnsonX",
+      "email": "bob1@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:10:00Z",
+      "updated_at": "2025-09-29T10:10:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "54444444-4444-4444-4444-444444444444",
+    "fields": {
+      "full_name": "Catherine LeeX",
+      "email": "catherine1@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:15:00Z",
+      "updated_at": "2025-09-29T10:15:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "65555555-5555-5555-5555-555555555555",
+    "fields": {
+      "full_name": "David KimX",
+      "email": "david1@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:20:00Z",
+      "updated_at": "2025-09-29T10:20:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "76666666-6666-6666-6666-666666666666",
+    "fields": {
+      "full_name": "Emily DavisX",
+      "email": "emily1@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:25:00Z",
+      "updated_at": "2025-09-29T10:25:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "87777777-7777-7777-7777-777777777777",
+    "fields": {
+      "full_name": "Frank MillerX",
+      "email": "frank1@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:30:00Z",
+      "updated_at": "2025-09-29T10:30:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "98888888-8888-8888-8888-888888888888",
+    "fields": {
+      "full_name": "Grace TaylorX",
+      "email": "grace1@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:35:00Z",
+      "updated_at": "2025-09-29T10:35:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "19999999-9999-9999-9999-999999999999",
+    "fields": {
+      "full_name": "Henry WhiteX",
+      "email": "henry1@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:40:00Z",
+      "updated_at": "2025-09-29T10:40:00Z"
+    }
+  },
+  {
+    "model": "chitchat.user",
+    "pk": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "fields": {
+      "full_name": "Isabella GreenX",
+      "email": "isabella1@example.com",
+      "password": "pbkdf2_sha256$260000$example$hashedpasswordhere",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "status": "ACTIVE",
+      "created_at": "2025-09-29T10:45:00Z",
+      "updated_at": "2025-09-29T10:45:00Z"
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "21111111-1111-1111-1111-111111111111",
+    "fields": {
+      "user": "21111111-1111-1111-1111-111111111111",
+      "bio": "Hi, I am JohnX",
+      "is_online": true,
+      "last_seen": "2025-09-29T12:00:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "32222222-2222-2222-2222-222222222222",
+    "fields": {
+      "user": "32222222-2222-2222-2222-222222222222",
+      "bio": "Hello, I am AliceX",
+      "is_online": false,
+      "last_seen": "2025-09-29T12:10:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "43333333-3333-3333-3333-333333333333",
+    "fields": {
+      "user": "43333333-3333-3333-3333-333333333333",
+      "bio": "Hey, I am BobX",
+      "is_online": true,
+      "last_seen": "2025-09-29T12:15:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "54444444-4444-4444-4444-444444444444",
+    "fields": {
+      "user": "54444444-4444-4444-4444-444444444444",
+      "bio": "Hello, CatherineX",
+      "is_online": false,
+      "last_seen": "2025-09-29T12:20:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "65555555-5555-5555-5555-555555555555",
+    "fields": {
+      "user": "65555555-5555-5555-5555-555555555555",
+      "bio": "DavidX in the house",
+      "is_online": true,
+      "last_seen": "2025-09-29T12:25:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "76666666-6666-6666-6666-666666666666",
+    "fields": {
+      "user": "76666666-6666-6666-6666-666666666666",
+      "bio": "EmilyX here!",
+      "is_online": false,
+      "last_seen": "2025-09-29T12:30:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "87777777-7777-7777-7777-777777777777",
+    "fields": {
+      "user": "87777777-7777-7777-7777-777777777777",
+      "bio": "FrankX reporting",
+      "is_online": true,
+      "last_seen": "2025-09-29T12:35:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "98888888-8888-8888-8888-888888888888",
+    "fields": {
+      "user": "98888888-8888-8888-8888-888888888888",
+      "bio": "GraceX here",
+      "is_online": false,
+      "last_seen": "2025-09-29T12:40:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "19999999-9999-9999-9999-999999999999",
+    "fields": {
+      "user": "19999999-9999-9999-9999-999999999999",
+      "bio": "HenryX here",
+      "is_online": true,
+      "last_seen": "2025-09-29T12:45:00Z",
+      "profile_picture": null
+    }
+  },
+  {
+    "model": "chitchat.userprofile",
+    "pk": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "fields": {
+      "user": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "bio": "IsabellaX in chat",
+      "is_online": false,
+      "last_seen": "2025-09-29T12:50:00Z",
+      "profile_picture": null
+    }
+  }
+]

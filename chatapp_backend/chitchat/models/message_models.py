@@ -45,4 +45,4 @@ class Message(models.Model):
         ]
 
     def __str__(self):
-        return f"Message from {self.sender.email} at {self.created_at}"
+        return f"Message from {self.sender.email} at {self.created_at}, conversation type: {self.conversation.conversation_type}"

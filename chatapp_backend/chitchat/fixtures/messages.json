@@ -1,0 +1,744 @@
+[
+  {
+    "model": "chitchat.message",
+    "pk": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "fields": {
+      "content": "Hey John, how are you?",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:00:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "b2c3d4e5-f678-9012-bcde-f23456789012",
+    "fields": {
+      "content": "Hi Bob, I'm good! How about you?",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "created_at": "2025-09-29T10:01:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "c3d4e5f6-7890-1234-cdef-345678901234",
+    "fields": {
+      "content": "Doing well, thanks. Working on a new project.",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:02:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "d4e5f678-9012-3456-def0-456789012345",
+    "fields": {
+      "content": "That sounds interesting! What kind of project?",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:03:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "e5f67890-1234-5678-ef01-567890123456",
+    "fields": {
+      "content": "It's a web app for chat. Similar to what we're using now.",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:04:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "f6789012-3456-7890-0123-678901234567",
+    "fields": {
+      "content": "Cool! Need any help with it?",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:05:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "78901234-5678-9012-3456-789012345678",
+    "fields": {
+      "content": "Maybe later. For now, I'm just planning.",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:06:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "89012345-6789-0123-4567-890123456789",
+    "fields": {
+      "content": "Alright, let me know if you need anything.",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:07:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "90123456-7890-1234-5678-901234567890",
+    "fields": {
+      "content": "Will do. Thanks!",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:08:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "01234567-8901-2345-6789-012345678901",
+    "fields": {
+      "content": "Hey, did you see the latest update?",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:09:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "12345678-9012-3456-7890-123456789012",
+    "fields": {
+      "content": "Yes, it looks great!",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:10:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "23456789-0123-4567-8901-234567890123",
+    "fields": {
+      "content": "Agreed. The team did a good job.",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:11:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "34567890-1234-5678-9012-345678901234",
+    "fields": {
+      "content": "Absolutely. Let's celebrate with a coffee.",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:12:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "45678901-2345-6789-0123-456789012345",
+    "fields": {
+      "content": "Sounds good! When?",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:13:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "56789012-3456-7890-1234-567890123456",
+    "fields": {
+      "content": "How about tomorrow afternoon?",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:14:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "67890123-4567-8901-2345-678901234567",
+    "fields": {
+      "content": "Perfect. See you then.",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:15:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "78901234-5678-9012-3456-789012345678",
+    "fields": {
+      "content": "Looking forward to it!",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:16:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "89012345-6789-0123-4567-890123456789",
+    "fields": {
+      "content": "Me too. Have a good day!",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:17:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "90123456-7890-1234-5678-901234567890",
+    "fields": {
+      "content": "You too!",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:18:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "01234567-8901-2345-6789-012345678901",
+    "fields": {
+      "content": "Hey, quick check-in.",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:19:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "12345678-9012-3456-7890-123456789012",
+    "fields": {
+      "content": "All good here. How's your day?",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:20:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "23456789-0123-4567-8901-234567890123",
+    "fields": {
+      "content": "Busy but productive.",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:21:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "34567890-1234-5678-9012-345678901234",
+    "fields": {
+      "content": "That's good to hear.",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:22:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "45678901-2345-6789-0123-456789012345",
+    "fields": {
+      "content": "Thanks. Talk later.",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:23:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "56789012-3456-7890-1234-567890123456",
+    "fields": {
+      "content": "Sure thing.",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:24:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "67890123-4567-8901-2345-678901234567",
+    "fields": {
+      "content": "Hey, quick question.",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:25:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "78901234-5678-9012-3456-789012345678",
+    "fields": {
+      "content": "What's up?",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:26:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "89012345-6789-0123-4567-890123456789",
+    "fields": {
+      "content": "Do you have the report ready?",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:27:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "90123456-7890-1234-5678-901234567890",
+    "fields": {
+      "content": "Almost. Sending it soon.",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:28:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "01234567-8901-2345-6789-012345678901",
+    "fields": {
+      "content": "Great, thanks!",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:29:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "12345678-9012-3456-7890-123456789012",
+    "fields": {
+      "content": "No problem.",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:30:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "23456789-0123-4567-8901-234567890123",
+    "fields": {
+      "content": "Hello team, let's start the meeting.",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "dddddddd-dddd-dddd-dddd-dddddddddddd",
+      "group": "11111111-1111-1111-1111-111111111111",
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T11:00:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "34567890-1234-5678-9012-345678901234",
+    "fields": {
+      "content": "Sure, I'm ready.",
+      "sender": "22222222-2222-2222-2222-222222222222",
+      "is_read": true,
+      "conversation": "dddddddd-dddd-dddd-dddd-dddddddddddd",
+      "group": "11111111-1111-1111-1111-111111111111",
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T11:01:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "45678901-2345-6789-0123-456789012345",
+    "fields": {
+      "content": "Me too.",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "dddddddd-dddd-dddd-dddd-dddddddddddd",
+      "group": "11111111-1111-1111-1111-111111111111",
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T11:02:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "30d4142b-214d-46ac-a19c-618efcbfb205",
+    "fields": {
+      "content": "Hey, what's new?",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:31:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "4a8fd2f8-482d-4518-8adc-bc70ab5e3c9d",
+    "fields": {
+      "content": "Not much, just chilling.",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:32:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "5d9968ed-a176-40b7-b02f-6cc562d01cf9",
+    "fields": {
+      "content": "Sounds good. Catch you later!",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:33:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "9dfbbb83-562d-4c97-9af6-9ab74fad2ab3",
+    "fields": {
+      "content": "Bye!",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:34:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "ec7a97d9-a54b-4ca2-8134-2cd337b927d6",
+    "fields": {
+      "content": "Hey again!",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:35:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "3b6cf7d9-400d-4c26-a16c-c4aec72dca09",
+    "fields": {
+      "content": "Hey, what's new?",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:31:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "045c2e71-1a0f-4b0a-8487-9f9eb6731943",
+    "fields": {
+      "content": "Not much, just chilling.",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:32:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "16a82100-2b60-4ad6-9e28-f20ec73459fa",
+    "fields": {
+      "content": "Sounds good. Catch you later!",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:33:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "dd32af60-f109-42aa-adfb-3f686b9053c0",
+    "fields": {
+      "content": "Bye!",
+      "sender": "33333333-3333-3333-3333-333333333333",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:34:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "616dc43c-66bc-4df8-8c83-788c4c241b61",
+    "fields": {
+      "content": "Hey again!",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": true,
+      "conversation": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T10:35:00Z"
+    }
+  },
+    {
+    "model": "chitchat.message",
+    "pk": "a1f3b5d8-7c1a-4d6f-91a7-1f2b3c4d5e6f",
+    "fields": {
+      "content": "Hey Bob, how are you?",
+      "sender": "11111111-1111-1111-1111-111111111111",
+      "is_read": false,
+      "conversation": "c1111111-1111-1111-1111-111111111111",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T11:30:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "b2d4e6f7-8a2b-4e9c-92b8-2c3d4e5f6a7b",
+    "fields": {
+      "content": "Bob, did you check the docs?",
+      "sender": "22222222-2222-2222-2222-222222222222",
+      "is_read": false,
+      "conversation": "c2222222-2222-2222-2222-222222222222",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T11:31:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "c3e5f7a9-9b3c-4f0d-93c9-3d4e5f6a7b8c",
+    "fields": {
+      "content": "Morning Bob!",
+      "sender": "44444444-4444-4444-4444-444444444444",
+      "is_read": false,
+      "conversation": "c4444444-4444-4444-4444-444444444444",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T11:32:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "d4f6a8b0-0c4d-4e1e-94d0-4e5f6a7b8c9d",
+    "fields": {
+      "content": "Hi Bob, let's catch up later.",
+      "sender": "55555555-5555-5555-5555-555555555555",
+      "is_read": false,
+      "conversation": "c5555555-5555-5555-5555-555555555555",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T11:33:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "e5f7b9c1-1d5e-4f2f-95e1-5f6a7b8c9d0e",
+    "fields": {
+      "content": "Bob, I’ll send the file soon.",
+      "sender": "66666666-6666-6666-6666-666666666666",
+      "is_read": false,
+      "conversation": "c6666666-6666-6666-6666-666666666666",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T11:34:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "f6a8c0d2-2e6f-4f3f-96f2-6a7b8c9d0e1f",
+    "fields": {
+      "content": "Hello Bob 👋",
+      "sender": "77777777-7777-7777-7777-777777777777",
+      "is_read": false,
+      "conversation": "c7777777-7777-7777-7777-777777777777",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T11:35:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "f7b9d1e3-3f7f-4f4f-97f3-7b8c9d0e1f2a",
+    "fields": {
+      "content": "What’s up Bob?",
+      "sender": "88888888-8888-8888-8888-888888888888",
+      "is_read": false,
+      "conversation": "c8888888-8888-8888-8888-888888888888",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T11:36:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "f8c0e2f4-4f8f-4f5f-98f4-8c9d0e1f2a3b",
+    "fields": {
+      "content": "Bob, are you joining the meeting?",
+      "sender": "99999999-9999-9999-9999-999999999999",
+      "is_read": false,
+      "conversation": "c9999999-9999-9999-9999-999999999999",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T11:37:00Z"
+    }
+  },
+  {
+    "model": "chitchat.message",
+    "pk": "f9d1f3f5-5f9f-4f6f-99f5-9d0e1f2a3b4c",
+    "fields": {
+      "content": "Bob, ping me when you’re free.",
+      "sender": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "is_read": false,
+      "conversation": "caaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "group": null,
+      "is_deleted": false,
+      "reply_to": null,
+      "created_at": "2025-09-29T11:38:00Z"
+    }
+  }
+]

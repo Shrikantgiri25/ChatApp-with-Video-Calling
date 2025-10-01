@@ -35,9 +35,29 @@ const ChatListPane = () => {
         renderItem={(chat) => (
           <List.Item>
             <List.Item.Meta
-              avatar={<Avatar>{chat?.conversation_type === "group" ? chat?.group?.group_name[0] : userProfileData?.email === chat?.user_one?.email ? chat?.user_two?.email[0] : chat?.user_one?.email[0]}</Avatar>}
+              avatar={<Avatar
+              src={
+                chat?.conversation_type === "group"
+                  ? `${import.meta.env.VITE_API_BASE_URL}${chat?.group?.group_avatar}`
+                  : userProfileData?.email === chat?.user_one?.email
+                    ? `${import.meta.env.VITE_API_BASE_URL}${chat?.user_two?.profile?.profile_picture}`
+                    : `${import.meta.env.VITE_API_BASE_URL}${chat?.user_one?.profile?.profile_picture}`
+              }
+            >
+              {chat?.conversation_type === "group"
+                ? chat?.group?.group_name[0]
+                : userProfileData?.email === chat?.user_one?.email
+                  ? chat?.user_two?.email[0]
+                  : chat?.user_one?.email[0]}
+            </Avatar>
+            }
               title={chat?.conversation_type === "group" ? chat?.group?.group_name : userProfileData?.email === chat?.user_one?.email ? chat?.user_two?.email : chat?.user_one?.email}
-              description={chat?.conversation_type === "group" ? userProfileData?.email === chat?.user_one?.email ? chat?.user_two?.email : chat?.user_one?.email + ": " + chat?.last_message : chat?.last_message}
+              description={
+                chat?.conversation_type === "group"
+                  ? `${chat?.last_message_sender === userProfileData?.email ? "You" : chat?.last_message_sender}: ${chat?.last_message}`
+                  : chat?.last_message
+              }
+
             />
           </List.Item>
         )}
