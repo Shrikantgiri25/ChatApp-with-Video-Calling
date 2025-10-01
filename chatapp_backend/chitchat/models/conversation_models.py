@@ -37,7 +37,7 @@ class Conversation(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    
     def clean(self):
         if self.conversation_type == "private" and (
             not self.user_one or not self.user_two

@@ -10,3 +10,4 @@ class ChitchatConfig(AppConfig):
         # Google login signal
         # This will import the signal handlers when the app is ready
         import chitchat.signals.google_login
+        import chitchat.signals.invalidate_cache

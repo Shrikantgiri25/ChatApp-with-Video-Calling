@@ -5,7 +5,7 @@ export const userChatService = {
   getUsersChats: async (setIsLoading = () => {}, dispatch) => {
     try {
       const response = await api.get("/user/chats/");
-      dispatch({type: FETCH_USER_CHATS, payload: response?.data?.data})
+      dispatch({type: FETCH_USER_CHATS, payload: response?.data?.results})
       setIsLoading(false);
       // return response.data;
     } catch {

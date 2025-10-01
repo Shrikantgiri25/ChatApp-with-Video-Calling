@@ -264,21 +264,34 @@ LOGIN_REDIRECT_URL = GOOGLE_LOGIN_REDIRECT_URL
 
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 
-# Channel layers with Redis
+REDIS_BASE_URL = env("REDIS_URL", default="redis://127.0.0.1:6379")
+
+# CELERY Setting in DB 0 & 1
+CELERY_BROKER_URL = env("CELERY_BROKER_URL", default=f"{REDIS_BASE_URL}/0")
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default=f"{REDIS_BASE_URL}/1")
+
+# Channel layers with Redis in DB 2
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(env("REDIS_HOST"), int(env("REDIS_PORT")))],
+            "hosts": [f"{REDIS_BASE_URL}/2"],
         },
     },
+}
+
+# Caching with Redis in DB 3
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"{REDIS_BASE_URL}/3",  # Use Redis DB 3 for caching
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
 }
 
 # CORS Settings
 CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGIN")
 
 CORS_ALLOW_CREDENTIALS = True
-
-# settings.py
-CELERY_BROKER_URL = env("CELERY_BROKER_URL")
-CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")

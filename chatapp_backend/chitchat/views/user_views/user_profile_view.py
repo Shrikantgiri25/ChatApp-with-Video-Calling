@@ -1,4 +1,7 @@
 from rest_framework import permissions, throttling, status
+# from django.utils.decorators import method_decorator
+# from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from chitchat.models import User
@@ -18,9 +21,17 @@ class UserProfileView(APIView):
     serializer_class = UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
     throttle_classes = [throttling.UserRateThrottle]
-    parser_classes = [MultiPartParser, FormParser]
-
+    parser_classes = [MultiPartParser, FormParser] 
     def get(self, request):
+        user_id = request.user.pk
+        cache_key = f"user_profile_{user_id}"
+        user_profile = cache.get(cache_key)
+        if user_profile:
+            return create_api_response(
+                data=user_profile,
+                message="User data retrieved successfully",
+                http_status=status.HTTP_200_OK,
+            )
         try:
             logger.info(f"[GET] Request for user profile: {request.user.email}")
             user = (
@@ -39,8 +50,10 @@ class UserProfileView(APIView):
             )
             serializer = self.serializer_class(user)
             logger.info(f"[GET] Fetched profile successfully for: {user.email}")
+            user_data = serializer.data
+            cache.set(key=cache_key, value=user_data, timeout=60 * 15)
             return create_api_response(
-                data=serializer.data,
+                data=user_data,
                 message="User data retrieved successfully",
                 http_status=status.HTTP_200_OK,
             )
