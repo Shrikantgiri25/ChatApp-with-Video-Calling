@@ -2,7 +2,7 @@
 import redis
 from django.conf import settings
 
-r = redis.Redis(host="localhost", port=6379, db=0)
+r = redis.Redis(host="localhost", port=6379, db=4)
 
 
 def mark_user_online(user_id):

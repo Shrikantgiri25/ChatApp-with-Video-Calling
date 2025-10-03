@@ -9,6 +9,7 @@ import CallListPane from '../MiddlePane/CallListPane/CallListPane';
 import ProfilePane from '../MiddlePane/PorfilePane/ProfilePane';
 import "./MainLayout.scss";
 import { UserAddOutlined } from '@ant-design/icons';
+import UserListPane from '../MiddlePane/UserListPane/UserListPane';
 
 const { Sider, Content } = Layout;
 
@@ -50,10 +51,10 @@ const MainLayout = () => {
                 }
               />
               <Menu.Item 
-                key="contacts" 
-                onClick={()=> setSelectedTab("contacts")}
+                key="users" 
+                onClick={()=> setSelectedTab("users")}
                 icon={
-                  <Tooltip title="Contacts" placement="right">
+                  <Tooltip title="Users" placement="right">
                     <ContactsOutlined />
                   </Tooltip>
                 }
@@ -96,7 +97,7 @@ const MainLayout = () => {
           <div className="middle-pane">
             {selectedTab === "chats" && <ChatListPane />}
             {selectedTab === "calls" && <CallListPane />}
-            {selectedTab === "contacts" && <ChatListPane />}
+            {selectedTab === "users" && <UserListPane />}
             {selectedTab === "profile" && <ProfilePane />}
           </div>
         </>

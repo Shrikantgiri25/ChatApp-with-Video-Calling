@@ -1,8 +1,8 @@
 import api from '../api/api';
-import { FETCH_USER_CHATS, APPEND_USER_CHATS } from '../store/actiontypes/constants';
+import { FETCH_USERS } from '../store/actiontypes/constants';
 
-export const userChatService = {
-  getUsersChats: async (
+export const userService = {
+  getUsers: async (
     setIsLoading = () => {}, 
     dispatch, 
     page = 1, 
@@ -11,11 +11,11 @@ export const userChatService = {
     appendMode = false
   ) => {
     try {
-      const response = await api.get(`/user/chats/?page=${page}`);
+      const response = await api.get(`/users/?page=${page}`);
       
       // Dispatch appropriate action based on mode
       dispatch({
-        type: FETCH_USER_CHATS, 
+        type: FETCH_USERS, 
         payload: response?.data?.results
       });
       
