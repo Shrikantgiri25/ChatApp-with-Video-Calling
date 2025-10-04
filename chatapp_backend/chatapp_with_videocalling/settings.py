@@ -81,6 +81,9 @@ REST_FRAMEWORK = {
         "anon": env("ANON_THROTTLE_LIMIT"),
     },
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
 }
 
 SIMPLE_JWT = {
@@ -295,3 +298,5 @@ CACHES = {
 CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGIN")
 
 CORS_ALLOW_CREDENTIALS = True
+
+

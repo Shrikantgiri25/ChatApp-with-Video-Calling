@@ -27,10 +27,15 @@ class UserChatHistoryView(APIView):
         logger.info(f"Request came for fetching chat history of user: {user_id}")
         try:
             # Get all conversations for this user
+            query_params = request.query_params.get("search", "")
             conversations = Conversation.objects.filter(
                 Q(user_one__id=user_id) |
                 Q(user_two__id=user_id) |
                 Q(group__members__id=user_id)
+            ).filter(
+                Q(user_one__email__icontains=query_params) |
+                Q(user_two__email__icontains=query_params) |
+                Q(group__group_name__icontains=query_params)
             ).select_related("user_one", "user_two", "group") \
              .prefetch_related("group__members") \
              .order_by("-updated_at")
