@@ -28,7 +28,7 @@ patchUserDetails: async (values, setSubmitting = () => {}, navigate) => {
     });
 
     if (response.status === 200) {
-      navigate("/dashboard");
+      navigate("/chats");
     }
   } catch (error) {
     console.error("Patch user profile failed:", error);

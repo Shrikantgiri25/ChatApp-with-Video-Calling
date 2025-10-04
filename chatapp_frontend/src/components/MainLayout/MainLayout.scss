@@ -10,12 +10,13 @@ $desktop: 1200px;
 
 .main-layout {
   min-height: 100vh;
+  background: #1e1e1e;
 
-  // Ensure sidebar children are flex-column
+  // Sidebar container
   .ant-layout-sider-children {
-    display: flex !important; 
-    flex-direction: column !important; 
-    justify-content: space-between !important; 
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
     flex-wrap: nowrap !important;
   }
 
@@ -67,10 +68,12 @@ $desktop: 1200px;
           align-items: center;
         }
       }
-        .ant-menu-item-selected {
-          background: transparent !important; // prevent AntD background
-          color: inherit !important;         // prevent AntD changing text/icon color
-        }
+
+      .ant-menu-item-selected {
+        background: transparent !important;
+        color: inherit !important;
+      }
+
       .profile-img {
         width: 40px;
         height: 40px;
@@ -86,7 +89,6 @@ $desktop: 1200px;
         }
       }
 
-      // Outlined User icon
       .profile-icon {
         width: 40px;
         height: 40px;
@@ -128,41 +130,28 @@ $desktop: 1200px;
           outline-offset: 2px;
         }
       }
-
-      @media (max-width: $mobile - 1px) {
-        .profile-img {
-          width: 28px;
-          height: 28px;
-        }
-
-        .profile-icon {
-          width: 32px;
-          height: 32px;
-          font-size: 18px;
-
-          .anticon {
-            font-size: 18px;
-          }
-        }
-      }
     }
   }
 
-  // Middle pane
+  // Middle Pane
   .middle-pane {
     width: 35%;
-    border-right: 1px solid #eee;
+    border-right: 1px solid #333;
     display: flex;
     flex-direction: column;
+    background: #252525;
+    overflow-y: auto;
   }
 
-  .content {
-    margin: 0;
-    padding: 1rem;
-    background: #2d2d2d;
+  // Content Pane
+  .content-pane {
     flex: 1;
+    background: #2d2d2d;
+    padding: 1rem;
+    overflow-y: auto;
   }
 
+  // Responsive adjustments
   @media (max-width: $mobile - 1px) {
     .sidebar {
       padding: 0.5rem 0;
@@ -177,7 +166,11 @@ $desktop: 1200px;
     }
 
     .middle-pane {
-      width: 35%;
+      width: 40%;
+    }
+
+    .content-pane {
+      padding: 0.5rem;
     }
   }
 
