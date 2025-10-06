@@ -8,15 +8,15 @@ export const userService = {
     page = 1, 
     setHasMore = () => {},
     // eslint-disable-next-line no-unused-vars
-    appendMode = false
+    search = ""
   ) => {
     try {
-      const response = await api.get(`/users/?page=${page}`);
+      const response = await api.get(`/users/?page=${page}${search ? `&search=${encodeURIComponent(search)}` : ""}`);
       
       // Dispatch appropriate action based on mode
       dispatch({
         type: FETCH_USERS, 
-        payload: response?.data?.results
+        payload: {isSearch: search, data: response?.data?.results}
       });
       
       // Check if there are more pages

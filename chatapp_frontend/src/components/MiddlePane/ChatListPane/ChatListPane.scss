@@ -4,9 +4,22 @@
 $theme-color: #861df7;
 
 // ChatListPane styles
+
+.header-wrapper{    
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  .searchText {
+      width: 100%;
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }}
 .chat-list-pane {
   background: #1e1e1e;
-  height: 100vh; // take full viewport height
+  height: 100%; 
   overflow-y: auto;
   padding: 0.5rem;
   display: flex;

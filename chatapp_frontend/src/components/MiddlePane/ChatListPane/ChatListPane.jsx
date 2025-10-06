@@ -1,4 +1,4 @@
-// 1. Update ChatListPane.jsx
+// ChatListPane.jsx
 import { List, Avatar, Spin } from "antd";
 import "./ChatListPane.scss";
 import { useEffect, useState, useRef, useCallback } from "react";
@@ -7,44 +7,80 @@ import { userChatService } from "../../../services/chatService";
 import { GetUserChatHistory } from "../../../store/selectors/chatSelectors";
 import LoadingScreen from "./../../spinner/Spinner";
 import { UserProfileDetails } from "../../../store/selectors/authselectors";
+import { REMOVE_USER_CHATS } from "../../../store/actiontypes/constants";
 
-const ChatListPane = () => {
+const ChatListPane = ({search}) => {
   const dispatch = useDispatch();
   const userChatHistory = useSelector(GetUserChatHistory);
   const userProfileData = useSelector(UserProfileDetails);
-  
+
   const [isLoading, setIsLoading] = useState(!userChatHistory);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   
   const observerRef = useRef(null);
   const loadMoreRef = useRef(null);
 
   // Initial load
   useEffect(() => {
-    if (!userChatHistory) {
-      userChatService.getUsersChats(setIsLoading, dispatch, 1, setHasMore);
-    } else {
-      setIsLoading(false);
-    }
-  }, [userChatHistory, dispatch]);
+    // Reset pagination
+    setPage(1);
+    setHasMore(true);
+    setIsLoading(true);
+    setIsInitialLoad(true);
+
+    userChatService.getUsersChats(setIsLoading, dispatch, 1, setHasMore)
+      .finally(() => {
+        // Small delay to ensure content renders before observer activates
+        setTimeout(() => setIsInitialLoad(false), 100);
+      });
+
+    return () => {
+      // Clean Redux data
+      dispatch({ type: REMOVE_USER_CHATS });
+    };
+  }, []);
+
+  // Search effect
+  useEffect(() => {
+    dispatch({ type: REMOVE_USER_CHATS });
+    if (search === null || search === undefined) return;
+
+    setPage(1);
+    setHasMore(true);
+    setIsLoading(true);
+    setIsInitialLoad(true);
+
+    const timer = setTimeout(() => {
+      userChatService.getUsersChats(setIsLoading, dispatch, 1, setHasMore, search)
+        .finally(() => {
+          setTimeout(() => setIsInitialLoad(false), 100);
+        });
+    }, 700);
+
+    return () => clearTimeout(timer);
+  }, [search]);
 
   // Load more function
   const loadMoreChats = useCallback(async () => {
     if (isLoadingMore || !hasMore) return;
-    
+
     setIsLoadingMore(true);
+
     const nextPage = page + 1;
     await userChatService.getUsersChats(
-      () => {}, 
-      dispatch, 
-      nextPage, 
+      () => {},
+      dispatch,
+      nextPage,
       setHasMore,
+      search
     );
+
     setPage(nextPage);
     setIsLoadingMore(false);
-  }, [page, dispatch, isLoadingMore, hasMore]);
+  }, [page, dispatch, isLoadingMore, hasMore, search]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
@@ -56,13 +92,15 @@ const ChatListPane = () => {
 
     observerRef.current = new IntersectionObserver((entries) => {
       const firstEntry = entries[0];
-      if (firstEntry.isIntersecting && hasMore && !isLoadingMore) {
+      // Added isInitialLoad check to prevent premature loading
+      if (firstEntry.isIntersecting && hasMore && !isLoadingMore && !isInitialLoad) {
         loadMoreChats();
       }
     }, options);
 
     const currentTarget = loadMoreRef.current;
-    if (currentTarget && !isLoading) {
+    // Only observe after initial load is complete and data is loaded
+    if (currentTarget && !isLoading && !isInitialLoad && userChatHistory?.length > 0) {
       observerRef.current.observe(currentTarget);
     }
 
@@ -71,18 +109,17 @@ const ChatListPane = () => {
         observerRef.current.unobserve(currentTarget);
       }
     };
-  }, [hasMore, isLoadingMore, isLoading, loadMoreChats]);
-
+  }, [hasMore, isLoadingMore, isLoading, isInitialLoad, loadMoreChats, userChatHistory]);
+  
   return (
     <div className="chat-list-pane">
       {isLoading ? (
         <LoadingScreen />
       ) : (
         <>
-          <h2 className="chatapp-title">Chat Application</h2>
           <List
             itemLayout="horizontal"
-            dataSource={userChatHistory}
+            dataSource={userChatHistory || []}
             renderItem={(chat) => (
               <List.Item>
                 <List.Item.Meta

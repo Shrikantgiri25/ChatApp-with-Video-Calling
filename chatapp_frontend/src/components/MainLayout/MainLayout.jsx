@@ -16,6 +16,8 @@ import ChatContentPane from "../ContentPane/ChatContentPane";
 import UserListContentPane from "../ContentPane/UserListContentPane";
 import Dashboard from "../Dashboard/Dashboard";
 import "./MainLayout.scss";
+import ChatListHeader from "../MiddlePane/ChatListPane/ChatListHeader";
+import UserListHeader from "../MiddlePane/UserListPane/UserListHeader";
 
 const { Sider, Content } = Layout;
 
@@ -117,10 +119,10 @@ const MainLayout = () => {
         {/* Middle Pane */}
         <Sider width={420} className="middle-pane">
           {selectedTab === "chats" && (
-            <ChatListPane setSelectedChatId={setSelectedChatId} />
+            <ChatListHeader setSelectedChatId={setSelectedChatId} />
           )}
           {selectedTab === "users" && (
-            <UserListPane setSelectedUserId={setSelectedUserId} />
+            <UserListHeader setSelectedUserId={setSelectedUserId} />
           )}
         </Sider>
 

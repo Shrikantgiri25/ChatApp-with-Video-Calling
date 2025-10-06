@@ -6,11 +6,11 @@ import EmailVerifyPage from './components/Auth/EmailVerify';
 import SetPasswordPage from './components/Auth/SetPasswordPage';
 import OnBoardingPage from './components/OnboardingPage/OnBoardingPage';
 import MainLayout from './components/MainLayout/MainLayout';
-import ChatListPane from './components/MiddlePane/ChatListPane/ChatListPane';
+import ChatListHeader from './components/MiddlePane/ChatListPane/ChatListHeader';
 import ChatContentPane from './components/ContentPane/ChatContentPane';
-import UserListPane from './components/MiddlePane/UserListPane/UserListPane';
 import UserListContentPane from './components/ContentPane/UserListContentPane';
 import Dashboard from "./components/Dashboard/Dashboard"
+import UserListHeader from './components/MiddlePane/UserListPane/UserListHeader';
 function App() {
   return (
     <Router>
@@ -29,14 +29,14 @@ function App() {
             {/* Chat Routes*/}
             <Route path='/chats' element={<MainLayout/>}>
               <Route index element={<Dashboard />} /> 
-              <Route path='list' element={<ChatListPane />} />
+              <Route path='list' element={<ChatListHeader />} />
               <Route path=":chatId" element={<ChatContentPane />} />
             </Route>
 
             {/* User Routes*/}
             <Route path='/users' element={<MainLayout/>}>
               <Route index element={<Dashboard />} /> 
-              <Route path='list' element={<UserListPane />} />
+              <Route path='list' element={<UserListHeader />} />
               <Route path=":userId" element={<UserListContentPane />} />
             </Route>
 
