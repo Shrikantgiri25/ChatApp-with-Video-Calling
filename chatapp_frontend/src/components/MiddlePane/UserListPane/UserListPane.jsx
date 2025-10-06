@@ -6,8 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { userService } from "../../../services/userService";
 import LoadingScreen from "../../spinner/Spinner";
 import { GetUsers } from "../../../store/selectors/userSelectors";
+import { REMOVE_USERS } from "../../../store/actiontypes/constants";
 
-const UserListPane = () => {
+const UserListPane = ({search}) => {
   const dispatch = useDispatch();
   const allUsers = useSelector(GetUsers);
 
@@ -15,18 +16,49 @@ const UserListPane = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const observerRef = useRef(null);
   const loadMoreRef = useRef(null);
 
   // Initial load
   useEffect(() => {
-    if (!allUsers) {
-      userService.getUsers(setIsLoading, dispatch, 1, setHasMore);
-    } else {
-      setIsLoading(false);
-    }
-  }, [allUsers, dispatch]);
+    setPage(1);
+    setHasMore(true);
+    setIsLoading(true);
+    setIsInitialLoad(true);
+
+    userService.getUsers(setIsLoading, dispatch, 1, setHasMore)
+      .finally(() => {
+        setTimeout(() => setIsInitialLoad(false), 100);
+      });
+
+    return () => {
+      // Clean Redux data if you have a remove action
+      dispatch({ type: REMOVE_USERS });
+    };
+  }, []);
+
+  // Search effect
+  useEffect(() => {
+    dispatch({ type: REMOVE_USERS });
+    if (search === null || search === undefined) return;
+    setPage(1);
+    setHasMore(true);
+    setIsLoading(true);
+    setIsInitialLoad(true);
+
+    const timerID = setTimeout(() => {
+      userService.getUsers(setIsLoading, dispatch, 1, setHasMore, search)
+        .finally(() => {
+          setTimeout(() => setIsInitialLoad(false), 100);
+        });
+    }, 1000);
+
+    return () => {
+      clearTimeout(timerID);
+    };
+  }, [search]);
 
   // Load more users
   const loadMoreUsers = useCallback(async () => {
@@ -34,29 +66,39 @@ const UserListPane = () => {
 
     setIsLoadingMore(true);
     const nextPage = page + 1;
-    await userService.getUsers(() => {}, dispatch, nextPage, setHasMore);
+    await userService.getUsers(() => {}, dispatch, nextPage, setHasMore, search);
     setPage(nextPage);
     setIsLoadingMore(false);
-  }, [page, dispatch, isLoadingMore, hasMore]);
+  }, [page, dispatch, isLoadingMore, hasMore, search]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
-    const options = { root: null, rootMargin: "100px", threshold: 0.1 };
+    const options = { 
+      root: null, 
+      rootMargin: "100px", 
+      threshold: 0.1 
+    };
+
     observerRef.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore && !isLoadingMore) {
+      const firstEntry = entries[0];
+      // Added isInitialLoad check to prevent premature loading
+      if (firstEntry.isIntersecting && hasMore && !isLoadingMore && !isInitialLoad) {
         loadMoreUsers();
       }
     }, options);
 
     const currentTarget = loadMoreRef.current;
-    if (currentTarget && !isLoading) observerRef.current.observe(currentTarget);
+    // Only observe after initial load is complete and data is loaded
+    if (currentTarget && !isLoading && !isInitialLoad && allUsers?.length > 0) {
+      observerRef.current.observe(currentTarget);
+    }
 
     return () => {
       if (currentTarget && observerRef.current) {
         observerRef.current.unobserve(currentTarget);
       }
     };
-  }, [hasMore, isLoadingMore, isLoading, loadMoreUsers]);
+  }, [hasMore, isLoadingMore, isLoading, isInitialLoad, loadMoreUsers, allUsers]);
 
   return (
     <div className="chat-list-pane">
@@ -64,10 +106,9 @@ const UserListPane = () => {
         <LoadingScreen />
       ) : (
         <>
-          <h2 className="chatapp-title">Users</h2>
           <List
             itemLayout="horizontal"
-            dataSource={allUsers}
+            dataSource={allUsers || []}
             renderItem={(user) => (
               <List.Item>
                 <List.Item.Meta
@@ -92,12 +133,14 @@ const UserListPane = () => {
           {/* Loading more indicator */}
           {isLoadingMore && (
             <div style={{ textAlign: "center", padding: "20px" }}>
-              <Spin size="large" />
+              <LoadingScreen />
             </div>
           )}
 
           {/* Intersection observer target */}
-          {hasMore && !isLoadingMore && <div ref={loadMoreRef} style={{ height: "20px" }} />}
+          {hasMore && !isLoadingMore && (
+            <div ref={loadMoreRef} style={{ height: "20px" }} />
+          )}
 
           {/* End of list */}
           {!hasMore && allUsers?.length > 0 && (

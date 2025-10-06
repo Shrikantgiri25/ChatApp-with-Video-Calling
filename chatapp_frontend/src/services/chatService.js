@@ -8,15 +8,15 @@ export const userChatService = {
     page = 1, 
     setHasMore = () => {},
     // eslint-disable-next-line no-unused-vars
-    appendMode = false
+    search = ""
   ) => {
     try {
-      const response = await api.get(`/user/chats/?page=${page}`);
+      const response = await api.get(`/user/chats/?page=${page}${search ? `&search=${encodeURIComponent(search)}` : ""}`);
       
       // Dispatch appropriate action based on mode
       dispatch({
         type: FETCH_USER_CHATS, 
-        payload: response?.data?.results
+        payload: {isSearch: search, data: response?.data?.results}
       });
       
       // Check if there are more pages
