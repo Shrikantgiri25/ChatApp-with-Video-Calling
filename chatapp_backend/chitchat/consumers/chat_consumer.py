@@ -316,7 +316,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def mark_message_delivered(self, message_id):
         from chitchat.models import Message
         try:
-            Message.objects.filter(id=message_id).update(is_delivered=True)
+            Message.objects.filter(id=message_id).update(is_read=True)
         except Message.DoesNotExist:
             pass
 
