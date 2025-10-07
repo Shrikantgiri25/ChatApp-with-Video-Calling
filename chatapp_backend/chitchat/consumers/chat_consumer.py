@@ -6,6 +6,7 @@ from chitchat.models.group_models import Group
 from chitchat.models.user_models import User
 from chitchat.models.conversation_models import Conversation
 from chitchat.models.attachment_models import Attachment
+from chitchat.models.user_conversation_metadata import UserConversationMetadata
 from django.db.models import Q
 from chitchat.utils.helpers.choices_fields import CONVERSATION_TYPE
 from chitchat.serializers.message_serializer import MessageSerializer
@@ -16,12 +17,12 @@ from chitchat.consumers.sanitize_groupnames import (
     sanitize_notification_group_name,
 )
 from asgiref.sync import sync_to_async
+from django.utils import timezone
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
     """
     ChatConsumer handles WebSocket connections for chat rooms.
-    It allows users to join chat rooms, send messages, and receive messages.
     """
 
     async def connect(self):
@@ -39,6 +40,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         self.room_group_name = f"chat_{self.room_name}"
         self.user = self.scope["user"]
+        
+        # Reset unread count when user opens conversation
+        await self.reset_unread_count_for_user()
+        
         # Join room group
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -65,23 +70,32 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except json.JSONDecodeError:
             await self.send(json.dumps({"error": "Invalid JSON"}))
             return
+            
         content = data.get("content", None)
         attachment_ids = data.get("attachment_ids", [])
         sender = self.scope["user"]
         receiver = data.get("receiver", None)
         group_id = data.get("group_id", None)
         reply_to = data.get("reply_to", None)
+        
         if not content and not attachment_ids:
             await self.send(
                 json.dumps({"error": "Cannot send empty message and attachment."})
             )
             return
+            
         saved_message, receiver, group = await self.save_message(
             content, sender, receiver, group_id, attachment_ids, reply_to
         )
+        
         if saved_message is None:
             return
+        
+        # Update metadata for all participants
+        await self.update_user_conversation_metadata(saved_message, sender, receiver, group)
+        
         send_data = await self.serialize_message(saved_message)
+        
         if send_data:
             # Send message to room group
             await self.channel_layer.group_send(
@@ -94,6 +108,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     },
                 },
             )
+            
             if send_data["message_obj"]["conversation"]["conversation_type"] == "group":
                 notifications = await self.create_group_message_notifications(
                     saved_message, sender, group
@@ -142,13 +157,101 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         await self.send(text_data=json.dumps(event["message"]))
 
+    @sync_to_async
+    def update_user_conversation_metadata(self, message, sender, receiver, group):
+        """
+        Update or create UserConversationMetadata for all participants.
+        - Updates last message info for everyone
+        - Increments unread count only for recipients (not sender)
+        """
+        conversation = message.conversation
+        timestamp = message.created_at
+        content = message.content
+        
+        if conversation.conversation_type == "private":
+            # For private chat - create/update for both users
+            for user in [conversation.user_one, conversation.user_two]:
+                if user:
+                    metadata, created = UserConversationMetadata.objects.get_or_create(
+                        conversation=conversation,
+                        user=user
+                    )
+                    
+                    # Update last message info for both
+                    metadata.last_message_content = content
+                    metadata.last_message_sender = sender
+                    metadata.last_message_timestamp = timestamp
+                    
+                    # Increment unread count only for the receiver
+                    if user != sender:
+                        metadata.unread_message_count += 1
+                    
+                    metadata.save()
+        
+        elif conversation.conversation_type == "groups" and group:
+            # For group chat - create/update for all members
+            group_members = group.members.all()
+            
+            for member in group_members:
+                metadata, created = UserConversationMetadata.objects.get_or_create(
+                    conversation=conversation,
+                    user=member
+                )
+                
+                # Update last message info for everyone
+                metadata.last_message_content = content
+                metadata.last_message_sender = sender
+                metadata.last_message_timestamp = timestamp
+                
+                # Increment unread count only for members who didn't send the message
+                if member != sender:
+                    metadata.unread_message_count += 1
+                
+                metadata.save()
+
+    @sync_to_async
+    def reset_unread_count_for_user(self):
+        """
+        Reset unread count to 0 when user opens the conversation.
+        """
+        try:
+            # Try to find the conversation by room_name
+            conversation = None
+            
+            # For group chats, room_name is the group_id
+            if self.room_name:
+                conversation = Conversation.objects.filter(
+                    Q(id=self.room_name) | Q(group__id=self.room_name)
+                ).first()
+                
+                # For private chats, need to find by participants
+                if not conversation:
+                    # room_name might be sanitized user IDs
+                    conversation = Conversation.objects.filter(
+                        Q(user_one=self.user) | Q(user_two=self.user),
+                        conversation_type="private"
+                    ).first()
+            
+            if conversation:
+                metadata = UserConversationMetadata.objects.filter(
+                    conversation=conversation,
+                    user=self.user
+                ).first()
+                
+                if metadata:
+                    metadata.unread_message_count = 0
+                    metadata.last_read_at = timezone.now()
+                    metadata.save(update_fields=['unread_message_count', 'last_read_at', 'updated_at'])
+        except Exception as e:
+            # Silent fail - don't break connection
+            pass
+
     async def save_message(
         self, content, sender, receiver, group, attachment_ids, reply_to
     ):
         """
         Save the message to the database.
         """
-        # If the message is sent to group
         attachment_obj = []
         reply_to_obj = None
 
@@ -161,6 +264,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     json.dumps({"error": "Message which you replies was not found."})
                 )
                 return None, None, None
+                
         if group:
             receiver = None
             try:
@@ -212,7 +316,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def mark_message_delivered(self, message_id):
         from chitchat.models import Message
         try:
-            Message.objects.filter(id= message_id).update(is_read=True)
+            Message.objects.filter(id=message_id).update(is_delivered=True)
         except Message.DoesNotExist:
             pass
 
@@ -243,11 +347,25 @@ class ChatConsumer(AsyncWebsocketConsumer):
         ).first()
         if conversation:
             return conversation
-        return Conversation.objects.create(
+        
+        # Create conversation and metadata for both users
+        conversation = Conversation.objects.create(
             user_one=sender,
             user_two=receiver,
             conversation_type=CONVERSATION_TYPE[0][0],
         )
+        
+        # Create metadata for both users
+        UserConversationMetadata.objects.create(
+            conversation=conversation,
+            user=sender
+        )
+        UserConversationMetadata.objects.create(
+            conversation=conversation,
+            user=receiver
+        )
+        
+        return conversation
 
     @database_sync_to_async
     def get_group_conversation(self, group):
@@ -257,10 +375,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
         ).first()
         if conversation:
             return conversation
-        return Conversation.objects.create(
+        
+        # Create conversation
+        conversation = Conversation.objects.create(
             group=group,
             conversation_type=CONVERSATION_TYPE[1][0],
         )
+        
+        # Create metadata for all group members
+        for member in group.members.all():
+            UserConversationMetadata.objects.create(
+                conversation=conversation,
+                user=member
+            )
+        
+        return conversation
 
     @database_sync_to_async
     def create_message_notification(self, message, sender, recipient):
@@ -279,7 +408,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         group_members = await self.get_group_members_excluding_sender(group, sender)
 
         for member in group_members:
-
             notification = await self.create_message_notification(
                 message, sender, member
             )
@@ -290,7 +418,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def get_group_members_excluding_sender(self, group, sender):
         return list(group.members.exclude(id=sender.id))
 
-    # Fetch All members of group
     @database_sync_to_async
     def get_group_by_id(self, group_id):
         return Group.objects.prefetch_related("members").get(id=group_id)
