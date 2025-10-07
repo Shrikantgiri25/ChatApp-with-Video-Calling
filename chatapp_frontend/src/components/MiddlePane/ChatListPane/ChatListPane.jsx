@@ -22,7 +22,7 @@ const ChatListPane = ({ search }) => {
   const observerRef = useRef(null);
   const loadMoreRef = useRef(null);
 
-  // 🔹 Initial load
+  // Initial load
   useEffect(() => {
     setPage(1);
     setHasMore(true);
@@ -35,7 +35,7 @@ const ChatListPane = ({ search }) => {
     return () => dispatch({ type: REMOVE_USER_CHATS });
   }, []);
 
-  // 🔹 Search effect
+  // Search effect
   useEffect(() => {
     dispatch({ type: REMOVE_USER_CHATS });
     if (search === null || search === undefined) return;
@@ -53,7 +53,7 @@ const ChatListPane = ({ search }) => {
     return () => clearTimeout(timer);
   }, [search]);
 
-  // 🔹 Load more function
+  // Load more function
   const loadMoreChats = useCallback(async () => {
     if (isLoadingMore || !hasMore) return;
     setIsLoadingMore(true);
@@ -63,7 +63,7 @@ const ChatListPane = ({ search }) => {
     setIsLoadingMore(false);
   }, [page, dispatch, isLoadingMore, hasMore, search]);
 
-  // 🔹 Intersection Observer for infinite scroll
+  // Intersection Observer for infinite scroll
   useEffect(() => {
     const options = { root: null, rootMargin: "100px", threshold: 0.1 };
 
@@ -137,19 +137,19 @@ const ChatListPane = ({ search }) => {
             }}
           />
 
-          {/* 🔹 Loading more indicator */}
+          {/* Loading more indicator */}
           {isLoadingMore && (
             <div style={{ textAlign: "center", padding: "20px" }}>
               <LoadingScreen />
             </div>
           )}
 
-          {/* 🔹 Intersection observer target */}
+          {/* Intersection observer target */}
           {hasMore && !isLoadingMore && (
             <div ref={loadMoreRef} style={{ height: "20px" }} />
           )}
 
-          {/* 🔹 End of list */}
+          {/* End of list */}
           {!hasMore && userChatHistory?.length > 0 && (
             <div style={{ textAlign: "center", padding: "20px", color: "#999" }}>
               No more chats
