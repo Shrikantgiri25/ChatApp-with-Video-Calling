@@ -4,7 +4,6 @@ from channels.middleware import BaseMiddleware
 from channels.db import database_sync_to_async
 from chitchat.models.user_models import User
 
-
 class TokenAuthMiddleware(BaseMiddleware):
     """Middleware to authenticate WebSocket connections using JWT tokens."""
 

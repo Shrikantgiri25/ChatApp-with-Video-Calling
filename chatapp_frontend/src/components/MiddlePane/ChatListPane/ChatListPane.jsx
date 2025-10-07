@@ -1,5 +1,4 @@
-// ChatListPane.jsx
-import { List, Avatar, Spin } from "antd";
+import { List, Avatar } from "antd";
 import "./ChatListPane.scss";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +8,7 @@ import LoadingScreen from "./../../spinner/Spinner";
 import { UserProfileDetails } from "../../../store/selectors/authselectors";
 import { REMOVE_USER_CHATS } from "../../../store/actiontypes/constants";
 
-const ChatListPane = ({search}) => {
+const ChatListPane = ({ search }) => {
   const dispatch = useDispatch();
   const userChatHistory = useSelector(GetUserChatHistory);
   const userProfileData = useSelector(UserProfileDetails);
@@ -19,28 +18,21 @@ const ChatListPane = ({search}) => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  
+
   const observerRef = useRef(null);
   const loadMoreRef = useRef(null);
 
   // Initial load
   useEffect(() => {
-    // Reset pagination
     setPage(1);
     setHasMore(true);
     setIsLoading(true);
     setIsInitialLoad(true);
 
     userChatService.getUsersChats(setIsLoading, dispatch, 1, setHasMore)
-      .finally(() => {
-        // Small delay to ensure content renders before observer activates
-        setTimeout(() => setIsInitialLoad(false), 100);
-      });
+      .finally(() => setTimeout(() => setIsInitialLoad(false), 100));
 
-    return () => {
-      // Clean Redux data
-      dispatch({ type: REMOVE_USER_CHATS });
-    };
+    return () => dispatch({ type: REMOVE_USER_CHATS });
   }, []);
 
   // Search effect
@@ -55,9 +47,7 @@ const ChatListPane = ({search}) => {
 
     const timer = setTimeout(() => {
       userChatService.getUsersChats(setIsLoading, dispatch, 1, setHasMore, search)
-        .finally(() => {
-          setTimeout(() => setIsInitialLoad(false), 100);
-        });
+        .finally(() => setTimeout(() => setIsInitialLoad(false), 100));
     }, 700);
 
     return () => clearTimeout(timer);
@@ -66,40 +56,25 @@ const ChatListPane = ({search}) => {
   // Load more function
   const loadMoreChats = useCallback(async () => {
     if (isLoadingMore || !hasMore) return;
-
     setIsLoadingMore(true);
-
     const nextPage = page + 1;
-    await userChatService.getUsersChats(
-      () => {},
-      dispatch,
-      nextPage,
-      setHasMore,
-      search
-    );
-
+    await userChatService.getUsersChats(() => {}, dispatch, nextPage, setHasMore, search);
     setPage(nextPage);
     setIsLoadingMore(false);
   }, [page, dispatch, isLoadingMore, hasMore, search]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
-    const options = {
-      root: null,
-      rootMargin: '100px',
-      threshold: 0.1
-    };
+    const options = { root: null, rootMargin: "100px", threshold: 0.1 };
 
     observerRef.current = new IntersectionObserver((entries) => {
       const firstEntry = entries[0];
-      // Added isInitialLoad check to prevent premature loading
       if (firstEntry.isIntersecting && hasMore && !isLoadingMore && !isInitialLoad) {
         loadMoreChats();
       }
     }, options);
 
     const currentTarget = loadMoreRef.current;
-    // Only observe after initial load is complete and data is loaded
     if (currentTarget && !isLoading && !isInitialLoad && userChatHistory?.length > 0) {
       observerRef.current.observe(currentTarget);
     }
@@ -110,7 +85,7 @@ const ChatListPane = ({search}) => {
       }
     };
   }, [hasMore, isLoadingMore, isLoading, isInitialLoad, loadMoreChats, userChatHistory]);
-  
+
   return (
     <div className="chat-list-pane">
       {isLoading ? (
@@ -120,58 +95,63 @@ const ChatListPane = ({search}) => {
           <List
             itemLayout="horizontal"
             dataSource={userChatHistory || []}
-            renderItem={(chat) => (
-              <List.Item>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar
-                      src={
-                        chat?.conversation_type === "group"
-                          ? `${import.meta.env.VITE_API_BASE_URL}${chat?.group?.group_avatar}`
-                          : userProfileData?.email === chat?.user_one?.email
-                            ? `${import.meta.env.VITE_API_BASE_URL}${chat?.user_two?.profile?.profile_picture}`
-                            : `${import.meta.env.VITE_API_BASE_URL}${chat?.user_one?.profile?.profile_picture}`
-                      }
-                    >
-                      {chat?.conversation_type === "group"
-                        ? chat?.group?.group_name[0]
-                        : userProfileData?.email === chat?.user_one?.email
-                          ? chat?.user_two?.email[0]
-                          : chat?.user_one?.email[0]}
-                    </Avatar>
-                  }
-                  title={
-                    chat?.conversation_type === "group"
-                      ? chat?.group?.group_name
-                      : userProfileData?.email === chat?.user_one?.email
-                        ? chat?.user_two?.email
-                        : chat?.user_one?.email
-                  }
-                  description={
-                    chat?.conversation_type === "group"
-                      ? `${chat?.last_message_sender === userProfileData?.email ? "You" : chat?.last_message_sender}: ${chat?.last_message}`
-                      : chat?.last_message
-                  }
-                />
-              </List.Item>
-            )}
+            renderItem={(chat) => {
+              const isGroup = chat?.conversation_type === "group";
+              const title = isGroup
+                ? chat?.group?.group_name || "Unnamed Group"
+                : chat?.other_user?.email || "Unknown User";
+              console.log(chat)
+              const avatarSrc = isGroup
+                ? chat?.group?.group_avatar
+                  ? `${import.meta.env.VITE_API_BASE_URL}${chat?.group?.group_avatar}`
+                  : null
+                : chat?.other_user?.profile_picture
+                  ? `${import.meta.env.VITE_API_BASE_URL}${chat?.other_user?.profile_picture}`
+                  : null;
+              const lastMsg = chat?.last_message_content || "";
+              const sender =
+                chat?.last_message_sender_email === userProfileData?.email
+                  ? "You"
+                  : chat?.last_message_sender_email?.split("@")[0];
+
+              return (
+                <List.Item>
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar src={avatarSrc}>
+                        {isGroup
+                          ? title[0]?.toUpperCase()
+                          : chat?.other_user?.email?.[0]?.toUpperCase()}
+                      </Avatar>
+                    }
+                    title={title}
+                    description={`${sender ? `${sender}: ` : ""}${lastMsg}`}
+                  />
+                  {chat.unread_message_count > 0 && (
+                    <div className="unread-badge">
+                      {chat.unread_message_count}
+                    </div>
+                  )}
+                </List.Item>
+              );
+            }}
           />
-          
+
           {/* Loading more indicator */}
           {isLoadingMore && (
-            <div style={{ textAlign: 'center', padding: '20px' }}>
+            <div style={{ textAlign: "center", padding: "20px" }}>
               <LoadingScreen />
             </div>
           )}
-          
+
           {/* Intersection observer target */}
           {hasMore && !isLoadingMore && (
-            <div ref={loadMoreRef} style={{ height: '20px' }} />
+            <div ref={loadMoreRef} style={{ height: "20px" }} />
           )}
-          
+
           {/* End of list */}
           {!hasMore && userChatHistory?.length > 0 && (
-            <div style={{ textAlign: 'center', padding: '20px', color: '#999' }}>
+            <div style={{ textAlign: "center", padding: "20px", color: "#999" }}>
               No more chats
             </div>
           )}

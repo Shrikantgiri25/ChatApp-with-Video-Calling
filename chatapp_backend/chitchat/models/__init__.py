@@ -7,3 +7,4 @@ from .notification_models import *
 from .user_models import *
 from .user_profile_models import *
 from .issued_tokens import *
+from .user_conversation_metadata import *
