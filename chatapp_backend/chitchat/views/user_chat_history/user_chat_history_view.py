@@ -26,7 +26,7 @@ class UserChatHistoryView(APIView):
         logger.info(f"Fetching chat history for user: {user.email}")
 
         try:
-            # ✅ Step 1: Apply search if provided
+            # Step 1: Apply search if provided
             search_query = request.query_params.get("search", "").strip()
 
             queryset = (
@@ -42,7 +42,7 @@ class UserChatHistoryView(APIView):
                 .order_by("-last_message_timestamp", "-updated_at")
             )
 
-            # ✅ Step 2: Apply search filters (on other user email or group name)
+            # Step 2: Apply search filters (on other user email or group name)
             if search_query:
                 queryset = queryset.filter(
                     Q(conversation__user_one__email__icontains=search_query)
@@ -50,11 +50,11 @@ class UserChatHistoryView(APIView):
                     | Q(conversation__group__group_name__icontains=search_query)
                 )
 
-            # ✅ Step 3: Paginate
+            # Step 3: Paginate
             paginator = self.pagination_class()
             page_queryset = paginator.paginate_queryset(queryset, request)
 
-            # ✅ Step 4: Serialize
+            # Step 4: Serialize
             serializer = self.serializer_class(page_queryset, many=True, context={"request": request})
 
             logger.info(f"Chat history fetched successfully for user: {user.email}")
