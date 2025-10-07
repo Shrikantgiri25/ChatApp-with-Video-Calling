@@ -74,8 +74,9 @@
                 return;
             }
 
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5MzY5NDM5LCJpYXQiOjE3NDkyODMwMzksImp0aSI6IjQ5OTQzNzgwMDM5MTRhYTZhNjA4ODhjNmI4ZDk2MTE5IiwidXNlcl9pZCI6IjY0NDJkMGRiLWU2MmQtNGQ0MS1iYzFjLTc5MzUxN2U3YWE0NCJ9.wy761Vxhc3jyB3p7CTCVNbkPE4w0ha32ETGeEUntubg";
-            chatSocket = new WebSocket(`ws://172.28.49.0:8000/ws/chat/${roomName}/?token=${token}`);
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5ODMxMDUyLCJpYXQiOjE3NTk4MTg4NTYsImp0aSI6Ijc2YTc5YzNlNjUyZTRlNDliZTE2NzFmZWViZDY2MzMzIiwidXNlcl9pZCI6ImExMGY2OTRlLWZiYjItNGZkZi05ZDVjLWE3NGNlNGY4ZTQxMSJ9.EGHHm3hYSFfkZL9enVh7sOrZkKiJiG00c209EvYZnVo";
+
+            chatSocket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${roomName}/?token=${token}`);
 
             chatSocket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
@@ -118,9 +119,9 @@
                 return;
             }
 
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5MzY5NDM5LCJpYXQiOjE3NDkyODMwMzksImp0aSI6IjQ5OTQzNzgwMDM5MTRhYTZhNjA4ODhjNmI4ZDk2MTE5IiwidXNlcl9pZCI6IjY0NDJkMGRiLWU2MmQtNGQ0MS1iYzFjLTc5MzUxN2U3YWE0NCJ9.wy761Vxhc3jyB3p7CTCVNbkPE4w0ha32ETGeEUntubg";
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5ODMxMDUyLCJpYXQiOjE3NTk4MTg4NTYsImp0aSI6Ijc2YTc5YzNlNjUyZTRlNDliZTE2NzFmZWViZDY2MzMzIiwidXNlcl9pZCI6ImExMGY2OTRlLWZiYjItNGZkZi05ZDVjLWE3NGNlNGY4ZTQxMSJ9.EGHHm3hYSFfkZL9enVh7sOrZkKiJiG00c209EvYZnVo";
 
-            notificationSocket = new WebSocket(`ws://172.28.49.0:8000/ws/notifications/user_${userId}/?token=${token}`);
+            notificationSocket = new WebSocket(`ws://127.0.0.1:8000/ws/notifications/user_${userId}/?token=${token}`);
 
             notificationSocket.onmessage = function(e) {
                 const data = JSON.parse(e.data);

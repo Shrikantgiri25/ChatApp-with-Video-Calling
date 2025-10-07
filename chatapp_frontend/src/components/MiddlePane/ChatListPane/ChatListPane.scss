@@ -4,19 +4,53 @@
 $theme-color: #861df7;
 
 // ChatListPane styles
-
-.header-wrapper{    
+.header-wrapper {    
   padding-left: 0.5rem;
   padding-right: 0.5rem;
-  .searchText {
-      width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .chatapp-title {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .search-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; // spacing between input and kebab
+    margin-bottom: 0.5rem;
+
+    .searchText {
+      flex: 1; // input takes remaining width
       padding: 0.4rem 0.6rem;
       border-radius: 6px;
       border: none;
       outline: none;
       font-size: 0.95rem;
-      margin-bottom: 0.5rem;
-    }}
+      background: #2d2d2d;
+      color: white;
+
+      &::placeholder {
+        color: #aaa;
+      }
+    }
+
+    .kebab-icon {
+      font-size: 20px;
+      cursor: pointer;
+      color: $theme-color;
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: white;
+      }
+    }
+  }
+}
+
 .chat-list-pane {
   background: #1e1e1e;
   height: 100%; 
@@ -25,26 +59,19 @@ $theme-color: #861df7;
   display: flex;
   flex-direction: column;
 
-  .chatapp-title {
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
   .unread-badge {
-  background: #861df7;
-  color: white;
-  border-radius: 50%;
-  min-width: 22px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-left: 10px;
-}
-
+    background: $theme-color;
+    color: white;
+    border-radius: 50%;
+    min-width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: 10px;
+  }
 
   .ant-list {
     flex: 1; // make list take full height for scrolling
@@ -110,6 +137,19 @@ $theme-color: #861df7;
     .chatapp-title {
       font-size: 1rem;
       margin-bottom: 0.5rem;
+    }
+
+    .search-wrapper {
+      gap: 0.25rem;
+
+      .searchText {
+        font-size: 0.9rem;
+        padding: 0.35rem 0.5rem;
+      }
+
+      .kebab-icon {
+        font-size: 18px;
+      }
     }
 
     .ant-list-item {

@@ -100,7 +100,6 @@ const ChatListPane = ({ search }) => {
               const title = isGroup
                 ? chat?.group?.group_name || "Unnamed Group"
                 : chat?.other_user?.email || "Unknown User";
-              console.log(chat)
               const avatarSrc = isGroup
                 ? chat?.group?.group_avatar
                   ? `${import.meta.env.VITE_API_BASE_URL}${chat?.group?.group_avatar}`

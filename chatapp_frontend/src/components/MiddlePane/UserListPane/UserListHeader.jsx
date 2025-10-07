@@ -14,9 +14,11 @@ const UserListHeader = () => {
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}> 
       <div className="header-wrapper">
         <h2 className="chatapp-title">Users</h2>
+         <div className="search-wrapper">
         <input className="searchText" value={userSearch} type="text" placeholder="Search..." onChange={(e) =>
                     dispatch({ type: USERLIST_SEARCH, payload: e.target.value })
                   }/>
+        </div>
       </div>
       
       {/* This is the main fix: Make the ChatListPane take all remaining vertical space 
