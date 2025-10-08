@@ -1,5 +1,4 @@
-// UserListPane.jsx
-import { List, Avatar, Spin } from "antd";
+import { List, Avatar, Checkbox, Tooltip } from "antd";
 import "../ChatListPane/ChatListPane.scss";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,8 +6,10 @@ import { userService } from "../../../services/userService";
 import LoadingScreen from "../../spinner/Spinner";
 import { GetUsers } from "../../../store/selectors/userSelectors";
 import { REMOVE_USERS } from "../../../store/actiontypes/constants";
+import { ArrowRightOutlined } from "@ant-design/icons";
+import GroupCreationForm from "./GroupCreationForm";
 
-const UserListPane = ({search}) => {
+const UserListPane = ({ search, isGroupCreation = false, showGroupForm, setShowGroupForm }) => {
   const dispatch = useDispatch();
   const allUsers = useSelector(GetUsers);
 
@@ -21,49 +22,78 @@ const UserListPane = ({search}) => {
   const observerRef = useRef(null);
   const loadMoreRef = useRef(null);
 
-  // Initial load
+  // ✅ Group Creation Checkbox Logic (Optimized using Set)
+  const [checkedItems, setCheckedItems] = useState(new Set());
+  
+  const handleCheckboxChange = useCallback((userId) => {
+    setCheckedItems((prev) => {
+      const newSet = new Set(prev);
+      newSet.has(userId) ? newSet.delete(userId) : newSet.add(userId);
+      return newSet;
+    });
+  }, []);
+
+  // ✅ Handle group creation submission
+  const handleGroupCreation = async (groupData, setSubmitting) => {
+    try {
+      // TODO: Replace with your actual group creation service
+      // await groupService.createGroup(groupData);
+      console.log("Creating group with data:", groupData);
+      
+      // Reset state after successful creation
+      setShowGroupForm(false);
+      setCheckedItems(new Set());
+      
+      // Navigate to the created group or show success message
+      // navigate(`/dashboard/group/${newGroupId}`);
+    } catch (error) {
+      console.error("Error creating group:", error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // ✅ Handle back button from group form
+  const handleBackFromGroupForm = () => {
+    setShowGroupForm(false);
+  };
+
+  // ✅ Initial load
   useEffect(() => {
     setPage(1);
     setHasMore(true);
     setIsLoading(true);
     setIsInitialLoad(true);
 
-    userService.getUsers(setIsLoading, dispatch, 1, setHasMore)
-      .finally(() => {
-        setTimeout(() => setIsInitialLoad(false), 100);
-      });
+    userService
+      .getUsers(setIsLoading, dispatch, 1, setHasMore)
+      .finally(() => setTimeout(() => setIsInitialLoad(false), 100));
 
-    return () => {
-      // Clean Redux data if you have a remove action
-      dispatch({ type: REMOVE_USERS });
-    };
-  }, []);
+    return () => dispatch({ type: REMOVE_USERS });
+  }, [dispatch]);
 
-  // Search effect
+  // ✅ Search effect
   useEffect(() => {
     dispatch({ type: REMOVE_USERS });
     if (search === null || search === undefined) return;
+
     setPage(1);
     setHasMore(true);
     setIsLoading(true);
     setIsInitialLoad(true);
 
     const timerID = setTimeout(() => {
-      userService.getUsers(setIsLoading, dispatch, 1, setHasMore, search)
-        .finally(() => {
-          setTimeout(() => setIsInitialLoad(false), 100);
-        });
-    }, 1000);
+      userService
+        .getUsers(setIsLoading, dispatch, 1, setHasMore, search)
+        .finally(() => setTimeout(() => setIsInitialLoad(false), 100));
+    }, 800);
 
-    return () => {
-      clearTimeout(timerID);
-    };
-  }, [search]);
+    return () => clearTimeout(timerID);
+  }, [search, dispatch]);
 
-  // Load more users
+  // ✅ Load more users (infinite scroll)
   const loadMoreUsers = useCallback(async () => {
     if (isLoadingMore || !hasMore) return;
-
     setIsLoadingMore(true);
     const nextPage = page + 1;
     await userService.getUsers(() => {}, dispatch, nextPage, setHasMore, search);
@@ -71,24 +101,23 @@ const UserListPane = ({search}) => {
     setIsLoadingMore(false);
   }, [page, dispatch, isLoadingMore, hasMore, search]);
 
-  // Intersection Observer for infinite scroll
+  // ✅ Intersection Observer
   useEffect(() => {
-    const options = { 
-      root: null, 
-      rootMargin: "100px", 
-      threshold: 0.1 
-    };
+    const options = { root: null, rootMargin: "100px", threshold: 0.1 };
 
     observerRef.current = new IntersectionObserver((entries) => {
       const firstEntry = entries[0];
-      // Added isInitialLoad check to prevent premature loading
-      if (firstEntry.isIntersecting && hasMore && !isLoadingMore && !isInitialLoad) {
+      if (
+        firstEntry.isIntersecting &&
+        hasMore &&
+        !isLoadingMore &&
+        !isInitialLoad
+      ) {
         loadMoreUsers();
       }
     }, options);
 
     const currentTarget = loadMoreRef.current;
-    // Only observe after initial load is complete and data is loaded
     if (currentTarget && !isLoading && !isInitialLoad && allUsers?.length > 0) {
       observerRef.current.observe(currentTarget);
     }
@@ -98,7 +127,25 @@ const UserListPane = ({search}) => {
         observerRef.current.unobserve(currentTarget);
       }
     };
-  }, [hasMore, isLoadingMore, isLoading, isInitialLoad, loadMoreUsers, allUsers]);
+  }, [
+    hasMore,
+    isLoadingMore,
+    isLoading,
+    isInitialLoad,
+    loadMoreUsers,
+    allUsers,
+  ]);
+
+  // ✅ Show group form when user clicks arrow
+  if (showGroupForm) {
+    return (
+      <GroupCreationForm
+        onBack={handleBackFromGroupForm}
+        selectedUserIds={checkedItems}
+        onSubmit={handleGroupCreation}
+      />
+    );
+  }
 
   return (
     <div className="chat-list-pane">
@@ -110,15 +157,24 @@ const UserListPane = ({search}) => {
             itemLayout="horizontal"
             dataSource={allUsers || []}
             renderItem={(user) => (
-              <List.Item>
+              <List.Item
+                actions={
+                  isGroupCreation
+                    ? [
+                        <Checkbox
+                          checked={checkedItems.has(user?.id)}
+                          onChange={() => handleCheckboxChange(user?.id)}
+                        />,
+                      ]
+                    : []
+                }
+              >
                 <List.Item.Meta
                   avatar={
                     <Avatar
-                      src={
-                        user.profile_picture
-                          ? `${import.meta.env.VITE_API_BASE_URL}${user.profile_picture}`
-                          : undefined
-                      }
+                      {...(user.profile_picture && {
+                        src: `${import.meta.env.VITE_API_BASE_URL}${user.profile_picture}`
+                      })}
                     >
                       {user.email?.[0]?.toUpperCase()}
                     </Avatar>
@@ -149,6 +205,19 @@ const UserListPane = ({search}) => {
             </div>
           )}
         </>
+      )}
+
+      {/* ✅ Floating Circle for Selected Count */}
+      {isGroupCreation && checkedItems.size > 0 && (
+        <Tooltip title={`Create group with ${checkedItems.size} selected user(s)`}>
+          <div 
+            className="selected-users-circle" 
+            data-count={checkedItems.size}
+            onClick={() => setShowGroupForm(true)}
+          >
+            <ArrowRightOutlined />
+          </div>
+        </Tooltip>
       )}
     </div>
   );

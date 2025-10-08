@@ -84,12 +84,18 @@ $theme-color: #861df7;
     padding: 0.5rem 1rem;
     transition: all 0.3s ease;
     cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     &:hover {
       background: color.scale($theme-color, $lightness: -30%);
     }
 
     .ant-list-item-meta {
+      display: flex;
+      align-items: center;
+
       .ant-list-item-meta-avatar {
         margin-right: 1rem;
 
@@ -114,6 +120,28 @@ $theme-color: #861df7;
         white-space: nowrap;
       }
     }
+
+    // Checkbox styling
+    .ant-checkbox-wrapper {
+      margin-left: auto;
+    }
+
+    .ant-checkbox-inner {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: #1e1e1e;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .ant-checkbox-checked .ant-checkbox-inner {
+      background-color: $theme-color;
+      border-color: $theme-color;
+    }
+
+    .ant-checkbox:hover .ant-checkbox-inner {
+      border-color: $theme-color;
+    }
   }
 
   // Scrollbar styling
@@ -128,6 +156,59 @@ $theme-color: #861df7;
 
   &::-webkit-scrollbar-track {
     background: transparent;
+  }
+
+  // Floating selected users circle
+  .selected-users-circle {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $theme-color 0%, color.scale($theme-color, $lightness: 20%) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(134, 29, 247, 0.4);
+    transition: all 0.3s ease;
+    z-index: 1000;
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(134, 29, 247, 0.6);
+      background: linear-gradient(135deg, color.scale($theme-color, $lightness: 10%) 0%, color.scale($theme-color, $lightness: 30%) 100%);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    .anticon {
+      font-size: 24px;
+      color: white;
+    }
+
+    // Badge showing count
+    &::before {
+      content: attr(data-count);
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ff4d4f;
+      color: white;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      border: 3px solid #1e1e1e;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
   }
 
   // Responsive adjustments
@@ -170,6 +251,24 @@ $theme-color: #861df7;
           width: 32px;
           height: 32px;
         }
+      }
+    }
+
+    .selected-users-circle {
+      width: 50px;
+      height: 50px;
+      bottom: 20px;
+      right: 20px;
+
+      .anticon {
+        font-size: 20px;
+      }
+
+      &::before {
+        width: 22px;
+        height: 22px;
+        font-size: 11px;
+        border-width: 2px;
       }
     }
   }

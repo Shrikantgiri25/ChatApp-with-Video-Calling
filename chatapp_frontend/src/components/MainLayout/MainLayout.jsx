@@ -10,8 +10,6 @@ import {
 } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { UserProfileDetails } from "../../store/selectors/authselectors";
-import ChatListPane from "../MiddlePane/ChatListPane/ChatListPane";
-import UserListPane from "../MiddlePane/UserListPane/UserListPane";
 import ChatContentPane from "../ContentPane/ChatContentPane";
 import UserListContentPane from "../ContentPane/UserListContentPane";
 import Dashboard from "../Dashboard/Dashboard";
