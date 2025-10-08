@@ -19,6 +19,9 @@ VERIFY_EMAIL = "User account is inactive please verify email"
 # Throttling
 TO_MANY_REQUEST_429 = "Too many requests. Please try again later."
 
+# Group Created
+GROUP_CREATED = "Group Creation Successful"
+
 # Common
 SOMETHING_WENT_WRONG = "Something went wrong."
 INVALID_CREDS = "Invalid Credentials"
