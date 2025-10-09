@@ -19,7 +19,7 @@ const GroupCreationForm = ({ onBack, selectedUserIds, onSubmit }) => {
     // Combine form values with selected user IDs
     const groupData = {
       ...values,
-      member_ids: Array.from(selectedUserIds)
+      members: Array.from(selectedUserIds)
     };
     
     await onSubmit(groupData, setSubmitting);

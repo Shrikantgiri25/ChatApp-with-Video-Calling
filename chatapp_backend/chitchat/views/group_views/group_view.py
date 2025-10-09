@@ -1,8 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework import permissions, throttling, status
 from rest_framework.exceptions import Throttled
-import logging
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.db import transaction
+import logging
 
 from chitchat.models import Conversation, UserConversationMetadata, Message, Notification
 from chitchat.serializers.group_serializer import GroupSerializer
@@ -21,13 +22,20 @@ class GroupView(APIView):
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
     throttle_classes = [throttling.UserRateThrottle]
+    parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request):
         try:
             group_admin = request.user
             group_data = request.data.copy()
-            group_data["group_admin"] = group_admin.id  # Use ID in serializer
-            group_data["members"].append(group_admin.id)
+
+            # Safely handle members
+            members = group_data.getlist("members")
+            members.append(str(group_admin.id))  # ensure admin is also a member
+            group_data.setlist("members", members)
+
+            group_data["group_admin"] = group_admin.id
+
             serializer = self.serializer_class(data=group_data)
             if not serializer.is_valid():
                 return create_api_response(
@@ -48,21 +56,23 @@ class GroupView(APIView):
                     conversation_type=CONVERSATION_TYPE[1][0],
                 )
 
-                # Create system message
+                # Create system messages
                 member_content = f"{group_admin} added you"
                 admin_content = f"Created the group '{group.group_name}'"
+
                 message = Message.objects.create(
                     sender=group_admin,
                     content=member_content,
                     conversation=conversation,
                     group=group,
                 )
+
                 timestamp = message.created_at
 
-                # Prepare bulk UserConversationMetadata
+                # Create metadata for each member
                 metadata_objects = []
                 for member in members:
-                    if member.email == group_admin.email:
+                    if member == group_admin:
                         metadata_objects.append(
                             UserConversationMetadata(
                                 conversation=conversation,
@@ -85,7 +95,8 @@ class GroupView(APIView):
                             )
                         )
                 UserConversationMetadata.objects.bulk_create(metadata_objects)
-                # Create notifications in bulk
+
+                # Create notifications (exclude admin)
                 notification_objects = [
                     Notification(
                         notification_type="message",

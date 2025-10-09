@@ -8,8 +8,9 @@ import { GetUsers } from "../../../store/selectors/userSelectors";
 import { REMOVE_USERS } from "../../../store/actiontypes/constants";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import GroupCreationForm from "./GroupCreationForm";
+import { groupService } from "../../../services/groupService";
 
-const UserListPane = ({ search, isGroupCreation = false, showGroupForm, setShowGroupForm }) => {
+const UserListPane = ({ search, isGroupCreation = false, showGroupForm, setShowGroupForm, setCreateGroup }) => {
   const dispatch = useDispatch();
   const allUsers = useSelector(GetUsers);
 
@@ -34,23 +35,14 @@ const UserListPane = ({ search, isGroupCreation = false, showGroupForm, setShowG
   }, []);
 
   // ✅ Handle group creation submission
-  const handleGroupCreation = async (groupData, setSubmitting) => {
-    try {
-      // TODO: Replace with your actual group creation service
-      // await groupService.createGroup(groupData);
-      console.log("Creating group with data:", groupData);
-      
+  const handleGroupCreation = async (groupData, setSubmitting) => {      
       // Reset state after successful creation
-      setShowGroupForm(false);
-      setCheckedItems(new Set());
+      await groupService.createGroup(groupData, setSubmitting)
+      console.log(groupData);
       
-      // Navigate to the created group or show success message
-      // navigate(`/dashboard/group/${newGroupId}`);
-    } catch (error) {
-      console.error("Error creating group:", error);
-    } finally {
-      setSubmitting(false);
-    }
+      setShowGroupForm(false);
+      setCreateGroup(false);
+      setCheckedItems(new Set());
   };
 
   // ✅ Handle back button from group form
