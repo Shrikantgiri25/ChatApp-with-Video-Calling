@@ -16,7 +16,27 @@ api.interceptors.request.use((config) => {
 
 // Handle responses & errors
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Show success toast for POST/PUT/PATCH/DELETE (not GET)
+    const method = response.config.method?.toUpperCase();
+
+    if ([200, 201].includes(response.status) && method !== "GET") {
+      const successMessage =
+        response.data?.message ||
+        (response.status === 201 ? "Created successfully!" : "Successfull");
+
+      toast.success(successMessage, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    }
+
+    return response;
+  },
   async (error) => {
     // Unauthorized → try refresh token
     if (error.response?.status === 401 || error.response?.status === 403) {

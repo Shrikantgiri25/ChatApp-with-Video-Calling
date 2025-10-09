@@ -57,7 +57,7 @@ const ChatListHeader = () => {
 
       {/* Chat List Pane */}
       {
-        createGroup ? <UserListPane search={userSearch} isGroupCreation={createGroup} showGroupForm={showGroupForm} setShowGroupForm={setShowGroupForm}/> : <ChatListPane search={conversationSearch} />
+        createGroup ? <UserListPane search={userSearch} isGroupCreation={createGroup} showGroupForm={showGroupForm} setShowGroupForm={setShowGroupForm} setCreateGroup={setCreateGroup}/> : <ChatListPane search={conversationSearch} />
       }
     </div>
   );
