@@ -4,27 +4,71 @@
 $theme-color: #861df7;
 
 // ChatListPane styles
-.header-wrapper {    
+.header-wrapper {  
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   display: flex;
   flex-direction: column;
+  
+  /* --- STYLES FOR BACK BUTTON HEADER (Add Group Members) --- */
+  .group-creation-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem; /* Space between the arrow and the title */
+      margin-bottom: 0.5rem; 
+
+      .back-icon {
+          font-size: 20px;
+          color: white; 
+          cursor: pointer;
+          padding: 4px;
+          border-radius: 50%;
+          transition: background-color 0.2s ease, color 0.2s ease;
+          
+          &:hover {
+              color: $theme-color; 
+              background-color: rgba($theme-color, 0.1);
+          }
+      }
+  }
+  /* ----------------------------------------- */
 
   .chatapp-title {
     color: white;
     font-size: 1.2rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    
+    padding: 2px 0; 
+    margin: 0; 
   }
 
+  /* Specific fix for alignment next to the icon */
+  .group-creation-header .chatapp-title {
+      /* Pushes the text down slightly for better vertical centering with the icon */
+      margin-top: 2px; 
+      /* Ensures text doesn't get stretched by odd line-height settings */
+      line-height: 1.2; 
+  }
+
+  /* When the title is alone (Chat Application), ensure it has bottom margin */
+  .chatapp-title:not(.group-creation-header *) {
+      margin-bottom: 0.5rem;
+  }
+  
   .search-wrapper {
     display: flex;
     align-items: center;
-    gap: 0.5rem; // spacing between input and kebab
+    gap: 0.5rem;
     margin-bottom: 0.5rem;
 
+    /* Style for the search bar when adding group members */
+    &.group-search-only {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+    }
+
     .searchText {
-      flex: 1; // input takes remaining width
+      flex: 1; 
       padding: 0.4rem 0.6rem;
       border-radius: 6px;
       border: none;
@@ -43,6 +87,10 @@ $theme-color: #861df7;
       cursor: pointer;
       color: $theme-color;
       transition: all 0.2s ease;
+      
+      .ant-dropdown-open & {
+        color: white; 
+      }
 
       &:hover {
         color: white;
@@ -74,7 +122,7 @@ $theme-color: #861df7;
   }
 
   .ant-list {
-    flex: 1; // make list take full height for scrolling
+    flex: 1; 
   }
 
   .ant-list-item {
@@ -269,6 +317,50 @@ $theme-color: #861df7;
         height: 22px;
         font-size: 11px;
         border-width: 2px;
+      }
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* --- Dropdown Menu (Kebab Options) Styling --- */
+/* ---------------------------------------------------------------------- */
+
+/* Target the Ant Design Dropdown Menu container */
+.ant-dropdown-menu {
+  background-color: #2d2d2d !important; 
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  padding: 8px 0 !important; 
+
+  /* Menu Items */
+  .ant-dropdown-menu-item {
+    color: white !important; 
+    padding: 8px 16px !important;
+    margin: 0 8px !important; 
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    
+    .anticon {
+        color: $theme-color !important; 
+        font-size: 16px;
+    }
+
+    /* Hover State */
+    &:hover {
+      background-color: rgba($theme-color, 0.15) !important; 
+    }
+
+    /* Active/Click State */
+    &:active {
+      background-color: rgba($theme-color, 0.25) !important;
+    }
+
+    /* Disabled/Hidden items */
+    &.ant-dropdown-menu-item-disabled {
+      color: #777 !important;
+      .anticon {
+        color: #777 !important;
       }
     }
   }
