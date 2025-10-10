@@ -23,7 +23,7 @@ const UserListPane = ({ search, isGroupCreation = false, showGroupForm, setShowG
   const observerRef = useRef(null);
   const loadMoreRef = useRef(null);
 
-  // ✅ Group Creation Checkbox Logic (Optimized using Set)
+  // Group Creation Checkbox Logic (Optimized using Set)
   const [checkedItems, setCheckedItems] = useState(new Set());
   
   const handleCheckboxChange = useCallback((userId) => {
@@ -34,23 +34,22 @@ const UserListPane = ({ search, isGroupCreation = false, showGroupForm, setShowG
     });
   }, []);
 
-  // ✅ Handle group creation submission
+  // Handle group creation submission
   const handleGroupCreation = async (groupData, setSubmitting) => {      
       // Reset state after successful creation
       await groupService.createGroup(groupData, setSubmitting)
-      console.log(groupData);
       
       setShowGroupForm(false);
       setCreateGroup(false);
       setCheckedItems(new Set());
   };
 
-  // ✅ Handle back button from group form
+  // Handle back button from group form
   const handleBackFromGroupForm = () => {
     setShowGroupForm(false);
   };
 
-  // ✅ Initial load
+  // Initial load
   useEffect(() => {
     setPage(1);
     setHasMore(true);
@@ -64,7 +63,7 @@ const UserListPane = ({ search, isGroupCreation = false, showGroupForm, setShowG
     return () => dispatch({ type: REMOVE_USERS });
   }, [dispatch]);
 
-  // ✅ Search effect
+  // Search effect
   useEffect(() => {
     dispatch({ type: REMOVE_USERS });
     if (search === null || search === undefined) return;
@@ -83,7 +82,7 @@ const UserListPane = ({ search, isGroupCreation = false, showGroupForm, setShowG
     return () => clearTimeout(timerID);
   }, [search, dispatch]);
 
-  // ✅ Load more users (infinite scroll)
+  // Load more users (infinite scroll)
   const loadMoreUsers = useCallback(async () => {
     if (isLoadingMore || !hasMore) return;
     setIsLoadingMore(true);
@@ -93,7 +92,7 @@ const UserListPane = ({ search, isGroupCreation = false, showGroupForm, setShowG
     setIsLoadingMore(false);
   }, [page, dispatch, isLoadingMore, hasMore, search]);
 
-  // ✅ Intersection Observer
+  // Intersection Observer
   useEffect(() => {
     const options = { root: null, rootMargin: "100px", threshold: 0.1 };
 
@@ -128,7 +127,7 @@ const UserListPane = ({ search, isGroupCreation = false, showGroupForm, setShowG
     allUsers,
   ]);
 
-  // ✅ Show group form when user clicks arrow
+  // Show group form when user clicks arrow
   if (showGroupForm) {
     return (
       <GroupCreationForm
@@ -199,7 +198,7 @@ const UserListPane = ({ search, isGroupCreation = false, showGroupForm, setShowG
         </>
       )}
 
-      {/* ✅ Floating Circle for Selected Count */}
+      {/* Floating Circle for Selected Count */}
       {isGroupCreation && checkedItems.size > 0 && (
         <Tooltip title={`Create group with ${checkedItems.size} selected user(s)`}>
           <div 

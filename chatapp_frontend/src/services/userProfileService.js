@@ -1,39 +1,36 @@
 import api from '../api/api';
 import { LOGIN_SUCCESS } from '../store/actiontypes/constants';
+
 export const userProfileService = {
   getUserDetails: async (setIsLoading = () => {}, dispatch, navigate) => {
     try {
       const response = await api.get("/profile/");
-      dispatch({type: LOGIN_SUCCESS, payload: response?.data?.data})
-      if(response.data.data.status === "NEW_USER"){
+      dispatch({ type: LOGIN_SUCCESS, payload: response?.data?.data });
+      
+      if (response.data.data.status === "NEW_USER") {
         navigate("/onboarding/profile");
       }
+      
       setIsLoading(false);
-      // return response.data;
-    } catch {
+    } catch (error) {
       setIsLoading(true);
-      return null; // error interceptor already handles toast
+      console.error("Get user profile failed:", error);
+      return null;
     }
   },
-patchUserDetails: async (values, setSubmitting = () => {}, navigate) => {
-  try {
-    const formData = new FormData();
-    if (values.bio) formData.append("profile.bio", values.bio);
-    if (values.profile_picture) formData.append("profile.profile_picture", values.profile_picture);
 
-    const response = await api.patch("/profile/", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data", // very important
-      },
-    });
-
-    if (response.status === 200) {
-      navigate("/chats");
+  patchUserDetails: async (formData) => {
+    try {
+      const response = await api.patch("/profile/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      
+      return response;
+    } catch (error) {
+      console.error("Patch user profile failed:", error);
+      throw error; // Re-throw to handle in component
     }
-  } catch (error) {
-    console.error("Patch user profile failed:", error);
-  } finally {
-    setSubmitting(false);
   }
-}
-}
+};

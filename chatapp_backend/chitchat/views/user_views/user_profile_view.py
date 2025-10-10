@@ -1,7 +1,4 @@
 from rest_framework import permissions, throttling, status
-# from django.utils.decorators import method_decorator
-# from django.views.decorators.cache import cache_page
-from django.core.cache import cache
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from chitchat.models import User
@@ -9,29 +6,29 @@ from chitchat.serializers.user_profile_serializer import UserProfileSerializer
 from chitchat.utils.helpers.create_api_response import create_api_response
 from chitchat.utils.helpers.enums import UserStatus
 import logging
+from django.core.cache import cache
 
 logger = logging.getLogger(__name__)
 
 
 class UserProfileView(APIView):
-    """
-    View to retrieve and update user data.
-    """
-
     serializer_class = UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
     throttle_classes = [throttling.UserRateThrottle]
-    parser_classes = [MultiPartParser, FormParser] 
+    parser_classes = [MultiPartParser, FormParser]
+
     def get(self, request):
         user_id = request.user.pk
         cache_key = f"user_profile_{user_id}"
         user_profile = cache.get(cache_key)
+        
         if user_profile:
             return create_api_response(
                 data=user_profile,
                 message="User data retrieved successfully",
                 http_status=status.HTTP_200_OK,
             )
+        
         try:
             logger.info(f"[GET] Request for user profile: {request.user.email}")
             user = (
@@ -48,7 +45,7 @@ class UserProfileView(APIView):
                 )
                 .get(pk=request.user.pk)
             )
-            serializer = self.serializer_class(user)
+            serializer = self.serializer_class(user, context={'request': request})
             logger.info(f"[GET] Fetched profile successfully for: {user.email}")
             user_data = serializer.data
             cache.set(key=cache_key, value=user_data, timeout=60 * 15)
@@ -75,28 +72,56 @@ class UserProfileView(APIView):
     def patch(self, request):
         try:
             user = request.user
-            logger.info(f"[PATCH] Request for updating user profile: {user.email}")
+            user_id = user.pk
+            cache_key = f"user_profile_{user_id}"
 
-            if user.status == "INACTIVE":
-                logger.warning(f"[PATCH] Inactive user attempted update: {user.email}")
-                return create_api_response(
-                    message="User account is inactive.",
-                    errors={"status": "User account is inactive."},
-                    http_status=status.HTTP_403_FORBIDDEN,
-                )
+            logger.info(f"[PATCH] Updating profile for: {user.email}")
+            logger.info(f"[PATCH] Request data: {request.data}")
+            logger.info(f"[PATCH] Request files: {request.FILES}")
 
-            # Make a mutable copy of request.data
+            # Make mutable copy of request data
             data = request.data.copy()
+            profile_data = {}
 
-            # Automatically activate NEW_USER
+            # Handle profile_picture
+            if "profile_picture" in request.FILES:
+                profile_data["profile_picture"] = request.FILES["profile_picture"]
+                logger.info("[PATCH] New profile picture uploaded")
+            elif data.get("profile_picture") == "":
+                profile_data["profile_picture"] = ""
+                logger.info("[PATCH] Profile picture deletion requested")
+
+            # Handle bio
+            if "bio" in data:
+                profile_data["bio"] = data.get("bio", "")
+                logger.info(f"[PATCH] Bio updated: {profile_data['bio'][:50]}...")
+
+            # Prepare final payload for serializer
+            final_data = {}
+            if "full_name" in data:
+                final_data["full_name"] = data["full_name"]
+                logger.info(f"[PATCH] Full name updated: {final_data['full_name']}")
+
+            if profile_data:
+                final_data["profile"] = profile_data
+
+            # Automatically change NEW_USER → ACTIVE
             if user.status == "NEW_USER":
+                final_data["status"] = UserStatus.ACTIVE
                 logger.debug(f"[PATCH] Updating status to ACTIVE for: {user.email}")
-                data["status"] = UserStatus.ACTIVE
 
-            serializer = self.serializer_class(user, data=data, partial=True)
+            # Serialize with context (needed for file uploads)
+            serializer = self.serializer_class(
+                user,
+                data=final_data,
+                partial=True,
+                context={"request": request},
+            )
 
             if serializer.is_valid():
                 serializer.save()
+                # Clear cached profile
+                cache.delete(cache_key)
                 logger.info(f"[PATCH] Profile updated successfully for: {user.email}")
                 return create_api_response(
                     data=serializer.data,
@@ -104,8 +129,7 @@ class UserProfileView(APIView):
                     http_status=status.HTTP_200_OK,
                 )
 
-            # If serializer validation fails
-            logger.error(f"[PATCH] Validation errors for {user.email}: {serializer.errors}")
+            logger.error(f"[PATCH] Validation errors: {serializer.errors}")
             return create_api_response(
                 message="Failed to update user data",
                 errors=serializer.errors,
@@ -113,7 +137,7 @@ class UserProfileView(APIView):
             )
 
         except Exception as e:
-            logger.exception(f"[PATCH] Unexpected error for user {user.email}: {e}")
+            logger.exception(f"[PATCH] Error updating profile: {e}")
             return create_api_response(
                 message="An unexpected error occurred while updating user data.",
                 errors={"detail": str(e)},

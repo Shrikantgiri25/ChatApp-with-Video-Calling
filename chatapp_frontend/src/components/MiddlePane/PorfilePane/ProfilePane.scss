@@ -1,0 +1,271 @@
+@use 'sass:color';
+
+$theme-color: #861df7;
+
+.profile-form-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
+  padding: 0;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex-grow: 1;
+  background: #121212;
+  color: #fff;
+  padding: 2.5rem 3rem;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  overflow-y: auto;
+
+  @media (max-width: 768px) {
+    padding: 2rem 1.5rem;
+  }
+
+  /* Smooth scrollbar */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($theme-color, 0.5);
+    border-radius: 10px;
+    &:hover {
+      background: rgba($theme-color, 0.8);
+    }
+  }
+
+  /* Header */
+  .form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.5px;
+      text-align: center;
+      flex: 1;
+    }
+
+    .back-button {
+      color: $theme-color;
+      font-size: 1.3rem;
+      transition: all 0.3s ease;
+
+      &:hover {
+        color: color.scale($theme-color, $lightness: 25%);
+        transform: translateX(-4px);
+      }
+    }
+  }
+
+  /* Profile Picture */
+  .profile-upload-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+
+    .profile-picture-wrapper {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      cursor: pointer;
+
+      .profile-picture-preview {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 2px dashed rgba($theme-color, 0.6);
+        background: #1f1f1f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition: all 0.3s ease;
+
+        &:hover {
+          border-color: $theme-color;
+          transform: scale(1.05);
+          box-shadow: 0 0 25px rgba(134, 29, 247, 0.5);
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .profile-icon {
+          font-size: 50px;
+          color: rgba(255, 255, 255, 0.85);
+        }
+      }
+
+      .trash-icon {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        background: #2a2a2a;
+        border-radius: 50%;
+        padding: 6px;
+        border: 1px solid $theme-color;
+        color: white;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.25s ease;
+
+        &:hover {
+          background: $theme-color;
+          transform: scale(1.15);
+        }
+      }
+    }
+  }
+
+  /* Editable Fields */
+  .editable-field {
+    margin-bottom: 2.5rem;
+    
+    label {
+      display: block;
+      font-weight: 600;
+      color: #ccc;
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      width: 100%;
+
+      // All inputs take full width consistently
+      .ant-input,
+      .ant-input-textarea {
+        flex: 1;
+        resize: none;
+        background: #2a2a2a;
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        color: #fff;
+        transition: all 0.3s ease;
+
+        &::placeholder {
+          color: #888;
+        }
+
+        &:hover:not(.readonly-input) {
+          border-color: rgba($theme-color, 0.6);
+        }
+
+        &:focus {
+          border-color: $theme-color;
+          box-shadow: 0 0 8px rgba(134, 29, 247, 0.4);
+          outline: none;
+        }
+      }
+
+      // Readonly state - looks like display text
+      .readonly-input {
+        background: transparent !important;
+        border: 1px solid transparent !important;
+        cursor: default !important;
+        padding: 0.8rem 0 !important;
+        color: #fff !important;
+
+        &:hover {
+          border-color: transparent !important;
+        }
+
+        &:focus {
+          border-color: transparent !important;
+          box-shadow: none !important;
+        }
+      }
+
+      // TextArea specific
+      .ant-input-textarea {
+        padding: 0.8rem 1rem;
+
+        textarea {
+          background: transparent;
+          border: none;
+          resize: none;
+          min-height: 90px;
+          padding: 0;
+          color: #fff;
+
+          &:focus {
+            box-shadow: none;
+          }
+        }
+
+        &.readonly-input {
+          padding: 0.8rem 0;
+          border: 1px solid transparent;
+
+          textarea {
+            padding: 0;
+          }
+        }
+
+        // Character count
+        .ant-input-textarea-show-count::after {
+          color: #888;
+          font-size: 0.85rem;
+        }
+      }
+
+      .edit-icon {
+        flex-shrink: 0;
+        color: $theme-color;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: all 0.25s ease;
+        margin-top: 0.8rem;
+
+        &:hover {
+          transform: scale(1.2);
+          color: color.scale($theme-color, $lightness: 15%);
+        }
+      }
+    }
+  }
+}
+
+// Override Ant Design global styles for this component
+.profile-form-container {
+  .ant-input-affix-wrapper {
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    
+    &:hover {
+      border-color: rgba($theme-color, 0.6) !important;
+    }
+
+    &:focus,
+    &.ant-input-affix-wrapper-focused {
+      border-color: $theme-color !important;
+      box-shadow: 0 0 8px rgba(134, 29, 247, 0.4) !important;
+    }
+
+    input {
+      background: transparent !important;
+      color: #fff !important;
+    }
+  }
+}
