@@ -17,8 +17,11 @@ const OnBoardingPage = () => {
   };
   
   const handleSubmit = async (values, { setSubmitting }) => {
-    await userProfileService.patchUserDetails(values, setSubmitting, navigate);
+    const response = await userProfileService.patchUserDetails(values, setSubmitting);
     setSubmitting(false);
+    if (response.status === 200) {
+      navigate("/chats");
+    }
   };
 
 

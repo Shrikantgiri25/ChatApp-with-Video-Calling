@@ -11,6 +11,7 @@ import ChatContentPane from './components/ContentPane/ChatContentPane';
 import UserListContentPane from './components/ContentPane/UserListContentPane';
 import Dashboard from "./components/Dashboard/Dashboard"
 import UserListHeader from './components/MiddlePane/UserListPane/UserListHeader';
+import ProfilePane from './components/MiddlePane/PorfilePane/ProfilePane';
 function App() {
   return (
     <Router>
@@ -38,6 +39,11 @@ function App() {
               <Route index element={<Dashboard />} /> 
               <Route path='list' element={<UserListHeader />} />
               <Route path=":userId" element={<UserListContentPane />} />
+            </Route>
+
+            <Route path='/profile' element={<MainLayout/>}>
+              <Route index element={<Dashboard />} /> 
+              <Route path=":userId" element={<ProfilePane />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/chats" replace />} />

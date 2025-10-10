@@ -12,11 +12,11 @@ $desktop: 1200px;
   min-height: 100vh;
   background: #1e1e1e;
 
-  // Sidebar container
+  // Sidebar container (Ant Design's Sider internal div)
   .ant-layout-sider-children {
     display: flex !important;
     flex-direction: column !important;
-    justify-content: space-between !important;
+    justify-content: space-between !important; /* Separates the main menu (top) and profile menu (bottom) */
     flex-wrap: nowrap !important;
   }
 
@@ -33,10 +33,13 @@ $desktop: 1200px;
       flex-direction: column;
       gap: 1rem;
 
+      /* Main menu item styling for reference */
       .ant-menu-item {
+        height: 50px; /* Standard Ant Design item height */
         color: white;
         display: flex;
         justify-content: center;
+        align-items: center;
 
         &:hover {
           background: color.scale($theme-color, $lightness: -10%);
@@ -52,14 +55,28 @@ $desktop: 1200px;
       }
     }
 
+    /* --- Profile and Logout Menu Styles --- */
     .menu-profile {
       background: #1e1e1e;
       display: flex;
-      justify-content: center;
-      margin-bottom: 1rem;
-
+      flex-direction: column;
+      align-items: center; 
+      margin-bottom: 1rem; /* Space below the last item */
+      margin-left: 20px;
       .ant-menu-item {
-        padding-left: 15px !important;
+        /* FIX: Match height and remove padding for perfect alignment */
+        height: 50px; /* Match main item height for consistent vertical alignment */
+        margin: 0 !important;
+        padding: 0 !important; /* CRITICAL: Remove default Ant Design padding */
+        width: 100%;
+        display: flex;
+        justify-content: center; /* Centers the item's content horizontally */
+        align-items: center;
+        
+        /* FIX: Theme-consistent space between profile and logout */
+        &:first-child { 
+             margin-bottom: 1rem !important;
+        }
 
         .ant-menu-item-icon {
           margin: 0 !important;
@@ -67,13 +84,19 @@ $desktop: 1200px;
           justify-content: center;
           align-items: center;
         }
-      }
 
-      .ant-menu-item-selected {
-        background: transparent !important;
-        color: inherit !important;
+        &:hover {
+          background: transparent; 
+        }
+        
+        /* Ensures selection highlight only applies to the profile icon/image */
+        &.ant-menu-item-selected {
+           background: transparent !important;
+           color: inherit !important;
+        }
       }
-
+      
+      /* --- Profile Icon/Image Styling --- */
       .profile-img {
         width: 40px;
         height: 40px;
@@ -88,12 +111,13 @@ $desktop: 1200px;
           box-shadow: 0 0 10px rgba($theme-color, 0.6);
         }
       }
-
+      
       .profile-icon {
         width: 40px;
         height: 40px;
-        display: inline-grid;
-        place-items: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         border-radius: 50%;
         border: 2px solid rgba($theme-color, 0.18);
         color: $theme-color;
@@ -103,9 +127,6 @@ $desktop: 1200px;
         transition: all 0.18s ease;
 
         .anticon {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
           font-size: 22px;
         }
 
@@ -128,6 +149,47 @@ $desktop: 1200px;
         &:focus-visible {
           outline: 3px solid rgba($theme-color, 0.18);
           outline-offset: 2px;
+        }
+      }
+
+      /* --- Logout Icon Styling --- */
+      
+      .logout-item {
+          /* When logout is the selected tab (if key="logout" is clicked) */
+          &.ant-menu-item-selected {
+             background: $theme-color !important;
+             .logout-icon-styled {
+                color: white;
+                border-color: $theme-color;
+             }
+          }
+          
+          /* Prevent the Menu.Item hover color from interfering */
+          &:hover {
+             background: transparent !important;
+          }
+      }
+
+      /* Style the actual Ant Icon element wrapper to create the circular button effect */
+      .logout-icon-styled {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        color: $theme-color;
+        border: 2px solid rgba($theme-color, 0.18);
+        cursor: pointer;
+        font-size: 22px;
+        transition: all 0.18s ease;
+        
+        &:hover {
+          transform: scale(1.08);
+          background: rgba($theme-color, 0.06);
+          border-color: $theme-color;
+          box-shadow: 0 8px 22px rgba($theme-color, 0.16);
+          color: white;
         }
       }
     }

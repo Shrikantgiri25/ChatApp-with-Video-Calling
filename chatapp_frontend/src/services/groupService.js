@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import api from '../api/api';
 
 export const groupService = {
@@ -22,8 +23,21 @@ export const groupService = {
         },
       });
 
-      if (response.status === 201) {
-        console.log("Group created successfully!");
+      const method = response.config.method?.toUpperCase();
+
+      if ([200, 201].includes(response.status) && method !== "GET") {
+        const successMessage =
+          response.data?.message ||
+          (response.status === 201 ? "Created successfully!" : "Successfull");
+
+        toast.success(successMessage, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       }
     } catch (error) {
       console.error("Create group failed:", error);
