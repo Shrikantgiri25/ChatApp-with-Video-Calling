@@ -10,7 +10,15 @@ export const AuthService = {
       throw error; // error interceptor already handles toast
     }
   },
-
+  logout: async (refreshToken) => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const response = await api.post("/logout/", refreshToken);
+      return response.data;
+    } catch(error) {
+      throw error; // error interceptor already handles toast
+    }
+  },
   register: async (userData) => {
     try {
       const response = await api.post("/register/", userData);
