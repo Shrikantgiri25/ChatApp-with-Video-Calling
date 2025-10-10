@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "channels",
     "drf_yasg",
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 AUTHENTICATION_BACKENDS = [

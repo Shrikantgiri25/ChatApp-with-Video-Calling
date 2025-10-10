@@ -20,7 +20,7 @@ from chitchat.views.user_views.user_view import UserView
 from chitchat.views.group_views.group_view import GroupView 
 from django.conf import settings
 from django.conf.urls.static import static
-
+from chitchat.views.logout_views.logout_views import LogoutView
 # Initialize the router
 router = DefaultRouter()
 router.register(r"register", UserRegistrationViewSet, basename="user-registration")
@@ -35,9 +35,10 @@ api_v1_routes = [
     ),
     path("set-password/", SetAccountPassword.as_view(), name="complete_registration"),
     
-    # Used for obtaining token and refresh token
+    # Used for obtaining login(token), logout and refresh token
     path("login/", CustomTokenObtainPairView.as_view(), name="get_token"),
     path("token/refresh/", CustomTokenRefreshView.as_view(), name="refresh_token"),
+    path('logout/', LogoutView.as_view(), name='logout'),
 
     path("google/token/", GoogleLoginTokenView.as_view(), name="google_token"),
     # Fetching current user data

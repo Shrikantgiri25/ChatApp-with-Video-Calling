@@ -18,6 +18,7 @@ import "./MainLayout.scss";
 import ChatListHeader from "../MiddlePane/ChatListPane/ChatListHeader";
 import UserListHeader from "../MiddlePane/UserListPane/UserListHeader";
 import ProfilePane from "../MiddlePane/PorfilePane/ProfilePane";
+import { AuthService } from "../../services/authService";
 
 const { Sider, Content } = Layout;
 
@@ -43,13 +44,15 @@ const MainLayout = () => {
     else if (location.pathname.startsWith("/profile")) setSelectedTab("profile");
   }, [location.pathname]);
 
-  const handleMenuClick = ({ key }) => {
+  const handleMenuClick = async ({ key }) => {
     setSelectedChatId(null);
     setSelectedUserId(null);
     // Note: The logout key should ideally NOT be handled here if it clears state,
     // but we'll include it for navigation to the profile page.
     if (key === "logout") {
       // Direct logout action
+      const refreshToken = localStorage.getItem("refresh_token");
+      await AuthService.logout({"refresh": refreshToken})
       localStorage.clear();
       navigate("/login");
       return;

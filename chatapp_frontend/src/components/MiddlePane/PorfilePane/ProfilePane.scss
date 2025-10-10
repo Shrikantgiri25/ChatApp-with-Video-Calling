@@ -112,24 +112,39 @@ $theme-color: #861df7;
         }
       }
 
-      .trash-icon {
-        position: absolute;
-        bottom: 8px;
-        right: 8px;
-        background: #2a2a2a;
-        border-radius: 50%;
-        padding: 6px;
-        border: 1px solid $theme-color;
-        color: white;
-        cursor: pointer;
-        font-size: 0.9rem;
-        transition: all 0.25s ease;
+.trash-icon {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 25px; // The border/circle size remains 30px
+  height: 25px;
+  // background: rgba(42, 42, 42, 0.95);
+  // border-radius: 50%;
+  // border: 1px solid #861df7;
+  // color: #fff;
+  cursor: pointer;
+  
+  // 💡 ADJUSTED: Decreased from 0.85rem to 0.75rem for a smaller icon
+  font-size: 0.75rem; 
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  z-index: 10;
+  box-shadow: 0 0 4px rgba(134, 29, 247, 0.4);
 
-        &:hover {
-          background: $theme-color;
-          transform: scale(1.15);
-        }
-      }
+  &:hover {
+    background: #861df7;
+    color: #fff;
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(134, 29, 247, 0.6);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
     }
   }
 
